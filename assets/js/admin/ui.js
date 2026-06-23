@@ -5,7 +5,7 @@
  * confirm dialogs, theme management, and admin auto-refresh.
  *
  * @package Countr
- * @version 1.6.0
+ * @version 1.0.0
  */
 
 import { t, getChartDefaults, updateAdminChartThemes } from './core.js';

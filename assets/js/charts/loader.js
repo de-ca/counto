@@ -5,7 +5,7 @@
  * API polling, auto-init on DOM ready, and theme change listening.
  *
  * @package Countr
- * @version 1.6.0
+ * @version 1.0.0
  */
 
 import { safeChartData, updateChartThemes } from './core.js';

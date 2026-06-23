@@ -5,7 +5,7 @@
  * charts (pages, referrers) for the admin panel tabs.
  *
  * @package Countr
- * @version 1.6.0
+ * @version 1.0.0
  */
 
 import {

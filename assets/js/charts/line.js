@@ -4,7 +4,7 @@
  * Creates hourly distribution and 30-day trend line charts.
  *
  * @package Countr
- * @version 1.6.0
+ * @version 1.0.0
  */
 
 import { t, getChartDefaults, destroyChart, getCharts } from './core.js';

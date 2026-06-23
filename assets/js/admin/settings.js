@@ -5,7 +5,7 @@
  * backup management, and tool actions (optimize, anonymize).
  *
  * @package Countr
- * @version 1.6.0
+ * @version 1.0.0
  */
 
 /**

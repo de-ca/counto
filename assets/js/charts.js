@@ -6,7 +6,7 @@
  * with existing inline scripts.
  *
  * @package Countr
- * @version 1.6.0
+ * @version 1.0.0
  */
 
 import { initCharts, fetchChartData } from './charts/loader.js';

@@ -4,7 +4,7 @@
  * Creates the browser distribution doughnut chart.
  *
  * @package Countr
- * @version 1.6.0
+ * @version 1.0.0
  */
 
 import { t, getTheme, getChartDefaults, destroyChart, getCharts } from './core.js';

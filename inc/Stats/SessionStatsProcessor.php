@@ -6,7 +6,7 @@
  *
  * @package Countr\Stats
  * @copyright  2026 Countr Analytics
- * @version 1.6.0
+ * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
 

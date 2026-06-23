@@ -5,7 +5,7 @@
  * Chart.js defaults, chart registry, and format utilities.
  *
  * @package Countr
- * @version 1.6.0
+ * @version 1.0.0
  */
 
 // Admin chart instances registry

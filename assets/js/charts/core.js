@@ -5,7 +5,7 @@
  * Chart.js defaults, chart registry, and data normalization.
  *
  * @package Countr
- * @version 1.6.0
+ * @version 1.0.0
  */
 
 // Chart instances registry for cleanup
