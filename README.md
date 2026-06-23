@@ -287,3 +287,8 @@ If you modify and redistribute Countr Analytics, you must:
 [⬆ Back to top](#countr-analytics--modern-sqlite-web-analytics)
 
 </div>
+
+---
+
+## Support the Project
+If you find Countr useful and would like to support its development, you can [buy me a coffee](https://ko-fi.com/countr) via Ko-fi. Every contribution helps keep this project free and ad-free.
