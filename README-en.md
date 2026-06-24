@@ -1,6 +1,6 @@
-<p align="center">
-  <img src="github-banner.svg" alt="Countr Analytics" style="pointer-events: none;">
-</p>
+<div align="center">
+  <img src="assets/github-banner.svg" alt="Countr Banner">
+</div>
 
 # Countr Analytics
 

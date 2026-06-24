@@ -1,6 +1,8 @@
 Lesen Sie dies auf Englisch: [Read this in English](README.md)
 
-![](github-banner-de.svg)
+<div align="center">
+  <img src="assets/github-banner-de.svg" alt="Countr Banner">
+</div>
 
 ---
 
