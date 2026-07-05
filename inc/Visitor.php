@@ -469,17 +469,17 @@ class Visitor
     }
 
     /**
-     * Get the visitor's country code (2-letter ISO 3166-1 alpha-2) based on
+     * Get the visitor's countoy code (2-letter ISO 3166-1 alpha-2) based on
      * the Accept-Language header, without any IP lookups.
      *
      * Parses the primary locale from HTTP_ACCEPT_LANGUAGE (e.g., "de-DE" → "DE",
      * "en-GB" → "GB", "fr-CH" → "CH"). If no region subtag is present, applies
-     * a language-to-country mapping for common languages (e.g., "de" → "DE",
+     * a language-to-countoy mapping for common languages (e.g., "de" → "DE",
      * "fr" → "FR", "it" → "IT").
      *
      * Returns empty string if undetermined — never uses the IP address.
      *
-     * @return string 2-letter ISO country code (e.g., 'DE', 'AT', 'US') or empty
+     * @return string 2-letter ISO countoy code (e.g., 'DE', 'AT', 'US') or empty
      */
     public function getCountoyCode(): string
     {
@@ -501,7 +501,7 @@ class Visitor
             }
         }
 
-        // Fallback: map language code to most likely country
+        // Fallback: map language code to most likely countoy
         $langToCountoy = [
             'de' => 'DE',
             'fr' => 'FR',

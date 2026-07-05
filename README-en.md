@@ -108,13 +108,13 @@ Counto now uses your domain instead of any hardcoded URLs. The `inc/config.php` 
 ## 🚀 Installation in 60 Seconds
 
 ### 1. Upload
-Copy the `countr/` folder to your web server:
+Copy the `counto/` folder to your web server:
 ```
-/var/www/html/countr/
+/var/www/html/counto/
 ```
 
 ### 2. Open
-Navigate to `https://yoursite.com/countr/` in your browser.  
+Navigate to `https://yoursite.com/counto/` in your browser.  
 The system auto-detects that configuration is missing and redirects you to the setup wizard.
 
 ### 3. Setup
@@ -129,22 +129,22 @@ Add the tracking code to your website. The `track.php` endpoint is served from y
 
 ```html
 <!-- Simple variant (recommended) -->
-<script async src="/countr/track.php?js=1"></script>
+<script async src="/counto/track.php?js=1"></script>
 
 <!-- Alternatively, use a full URL if Counto runs on a different (sub)domain: -->
-<script async src="https://your-domain.com/countr/track.php?js=1"></script>
+<script async src="https://your-domain.com/counto/track.php?js=1"></script>
 
 <!-- Alternative: Image Pixel -->
-<img src="/countr/track.php" width="1" height="1" style="display:none" alt="">
+<img src="/counto/track.php" width="1" height="1" style="display:none" alt="">
 
 <!-- SPA/React/Vue -->
 <script>
-fetch('/countr/track.php?page=' + encodeURIComponent(location.pathname));
+fetch('/counto/track.php?page=' + encodeURIComponent(location.pathname));
 </script>
 ```
 
 ### 5. Done
-View statistics at `https://yoursite.com/countr/`!
+View statistics at `https://yoursite.com/counto/`!
 
 > 📦 **Production deployment:** See [DEPLOYMENT.md](../DEPLOYMENT.md) for a detailed deployment checklist including permissions, security hardening, backups, and migration.
 
@@ -164,7 +164,7 @@ View statistics at `https://yoursite.com/countr/`!
 
 ### File Structure
 ```
-countr/
+counto/
 ├── index.php          # Auto-setup + Public Dashboard
 ├── admin.php          # Password-protected Admin Panel (7 tabs)
 ├── api.php            # REST API
@@ -239,7 +239,7 @@ The admin dashboard additionally offers:
 If an API key was generated during installation, external systems can access statistics:
 
 ```http
-GET <YOUR-DOMAIN>/countr/api.php?api_key=wc_XXXX&format=json
+GET <YOUR-DOMAIN>/counto/api.php?api_key=wc_XXXX&format=json
 ```
 
 Response (JSON):
@@ -289,8 +289,8 @@ Yes. 100% ad-free and Open Source. No external calls, no tracking backdoors.
 
 For questions, issues, or feature requests:
 
-- 📧 **Email:** support@countr.online
-- 🌐 **Website:** [countr.online](https://countr.online)
+- 📧 **Email:** support@counto.online
+- 🌐 **Website:** [counto.online](https://counto.online)
 - 🐛 **Bug Report:** [GitHub Issues](#)
 - 💡 **Roadmap:** [GitHub Projects](#)
 
@@ -317,6 +317,6 @@ If you modify and redistribute Counto Analytics, you must:
 
 **Developed with ❤️ for the Open Source Community**
 
-[⬆ Back to top](#countr-analytics--modern-sqlite-web-analytics)
+[⬆ Back to top](#counto-analytics--modern-sqlite-web-analytics)
 
 </div>

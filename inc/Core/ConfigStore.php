@@ -82,7 +82,7 @@ class ConfigStore
 
     private function __construct(string $baseDir = '', string $configFile = 'data/config.json')
     {
-        $baseDir = $baseDir ?: (defined('COUNTR_DIR') ? COUNTR_DIR : __DIR__ . '/../..');
+        $baseDir = $baseDir ?: (defined('COUNTO_DIR') ? COUNTO_DIR : __DIR__ . '/../..');
         $this->filePath  = rtrim($baseDir, '/') . '/' . ltrim($configFile, '/');
         $this->backupDir = rtrim($baseDir, '/') . '/data/backups';
 

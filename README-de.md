@@ -77,13 +77,13 @@ Lesen Sie dies auf Englisch: [Read this in English](README.md)
 ## 🚀 Installation in 60 Sekunden
 
 ### 1. Hochladen
-Kopieren Sie den `countr/`-Ordner auf Ihren Webserver:
+Kopieren Sie den `counto/`-Ordner auf Ihren Webserver:
 ```
-/var/www/html/countr/
+/var/www/html/counto/
 ```
 
 ### 2. Aufrufen
-Öffnen Sie `https://ihreseite.de/countr/` im Browser.  
+Öffnen Sie `https://ihreseite.de/counto/` im Browser.  
 Das Setup erkennt automatisch, dass die Konfiguration fehlt, und leitet Sie zum Setup-Assistenten weiter.
 
 ### 3. Setup
@@ -98,22 +98,22 @@ Fügen Sie den Tracking-Code in Ihre Webseite ein. Der `track.php`-Endpunkt wird
 
 ```html
 <!-- Einfache Variante (empfohlen) -->
-<script async src="/countr/track.php?js=1"></script>
+<script async src="/counto/track.php?js=1"></script>
 
 <!-- Oder mit voller URL, wenn Counto auf einer anderen (Sub-)Domain läuft: -->
-<script async src="https://ihre-domain.de/countr/track.php?js=1"></script>
+<script async src="https://ihre-domain.de/counto/track.php?js=1"></script>
 
 <!-- Alternative: Image Pixel -->
-<img src="/countr/track.php" width="1" height="1" style="display:none" alt="">
+<img src="/counto/track.php" width="1" height="1" style="display:none" alt="">
 
 <!-- SPA/React/Vue -->
 <script>
-fetch('/countr/track.php?page=' + encodeURIComponent(location.pathname));
+fetch('/counto/track.php?page=' + encodeURIComponent(location.pathname));
 </script>
 ```
 
 ### 5. Fertig
-Statistiken unter `https://ihreseite.de/countr/` ansehen!
+Statistiken unter `https://ihreseite.de/counto/` ansehen!
 
 > 📦 **Produktiv-Deployment:** Siehe [DEPLOYMENT.md](../DEPLOYMENT.md) für eine detaillierte Deployment-Checkliste mit Berechtigungen, Sicherheitshärtung, Backups und Migration.
 
@@ -133,7 +133,7 @@ Statistiken unter `https://ihreseite.de/countr/` ansehen!
 
 ### Dateistruktur
 ```
-countr/
+counto/
 ├── index.php          # Auto-Setup + Öffentliches Dashboard
 ├── admin.php          # Passwortgeschütztes Admin-Panel (7 Tabs)
 ├── api.php            # REST API
@@ -208,7 +208,7 @@ Das Admin-Dashboard bietet zusätzlich:
 Wenn bei der Installation ein API-Schlüssel generiert wurde, können externe Systeme auf die Statistiken zugreifen:
 
 ```http
-GET <IHRE-DOMAIN>/countr/api.php?api_key=wc_XXXX&format=json
+GET <IHRE-DOMAIN>/counto/api.php?api_key=wc_XXXX&format=json
 ```
 
 Antwort (JSON):
@@ -258,8 +258,8 @@ Ja. 100% werbefrei und Open Source. Keine externen Aufrufe, keine Tracking-Backd
 
 Bei Fragen, Problemen oder Feature-Wünschen:
 
-- 📧 **Email:** support@countr.online
-- 🌐 **Website:** [countr.online](https://countr.online)
+- 📧 **Email:** support@counto.online
+- 🌐 **Website:** [counto.online](https://counto.online)
 - 🐛 **Bug-Report:** [GitHub Issues](#)
 - 💡 **Roadmap:** [GitHub Projects](#)
 
@@ -286,6 +286,6 @@ Wenn Sie Counto Analytics modifizieren und weiterverbreiten, müssen Sie:
 
 **Entwickelt mit ❤️ für die Open-Source-Community**
 
-[⬆ Nach oben](#countr-analytics--moderne-sqlite-web-analytics)
+[⬆ Nach oben](#counto-analytics--moderne-sqlite-web-analytics)
 
 </div>

@@ -1,11 +1,11 @@
 <?php
 /**
- * countr – Internationalization (i18n) Module
+ * counto – Internationalization (i18n) Module
  *
  * Detects the user's preferred language via a strict priority hierarchy:
  *  1. ?lang= query parameter (explicit manual override) – stored in session if available
  *  2. HTTP_ACCEPT_LANGUAGE browser header (first two chars)
- *  3. Cloudflare HTTP_CF_IPCOUNTRY header (Geo-IP fallback)
+ *  3. Cloudflare HTTP_CF_IPcountoY header (Geo-IP fallback)
  *  4. Default: en (English)
  *
  * @package    Counto
@@ -46,8 +46,8 @@ elseif (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
     }
 }
 // --- Priority 3: Cloudflare Geo-IP header (optional fallback) ---
-elseif (!empty($_SERVER['HTTP_CF_IPCOUNTRY'])) {
-    $cc = strtoupper($_SERVER['HTTP_CF_IPCOUNTRY']);
+elseif (!empty($_SERVER['HTTP_CF_IPcountoY'])) {
+    $cc = strtoupper($_SERVER['HTTP_CF_IPcountoY']);
     if (in_array($cc, ['DE', 'AT', 'CH'], true)) {
         $lang = 'de';
     } else {

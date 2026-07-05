@@ -86,13 +86,13 @@ class Database
     /**
      * Private constructor – use getInstance().
      *
-     * @param string|null $dbPath    Path to SQLite database (defaults to /var/www/html/countr/data/countr.db)
-     * @param string|null $backupDir Path to backup directory (defaults to /var/www/html/countr/data/backups)
+     * @param string|null $dbPath    Path to SQLite database (defaults to /var/www/html/counto/data/counto.db)
+     * @param string|null $backupDir Path to backup directory (defaults to /var/www/html/counto/data/backups)
      */
     private function __construct(?string $dbPath = null, ?string $backupDir = null)
     {
-        $this->dbPath = $dbPath ?? '/var/www/html/countr/data/countr.db';
-        $this->backupDir = $backupDir ?? '/var/www/html/countr/data/backups';
+        $this->dbPath = $dbPath ?? '/var/www/html/counto/data/counto.db';
+        $this->backupDir = $backupDir ?? '/var/www/html/counto/data/backups';
     }
 
     /**

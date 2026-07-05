@@ -91,7 +91,7 @@ class Logger
         $entry = "[{$timestamp}] [{$level}] {$message}{$contextStr}";
 
         // Write to log file
-        $logFile = $this->logDir . '/countr_' . date('Y-m-d') . '.log';
+        $logFile = $this->logDir . '/counto_' . date('Y-m-d') . '.log';
         @file_put_contents($logFile, $entry . "\n", FILE_APPEND | LOCK_EX);
 
         // Also write to PHP error_log if enabled
@@ -107,7 +107,7 @@ class Logger
      */
     public function getTodayEntries(): array
     {
-        $logFile = $this->logDir . '/countr_' . date('Y-m-d') . '.log';
+        $logFile = $this->logDir . '/counto_' . date('Y-m-d') . '.log';
         if (!file_exists($logFile)) {
             return [];
         }
@@ -127,7 +127,7 @@ class Logger
         $cutoff = time() - ($maxAgeDays * 86400);
         $deleted = 0;
 
-        $files = glob($this->logDir . '/countr_*.log');
+        $files = glob($this->logDir . '/counto_*.log');
         if ($files === false) {
             return 0;
         }

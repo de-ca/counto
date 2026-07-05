@@ -14,7 +14,7 @@
 declare(strict_types=1);
 
 // ========== BOOTSTRAP ==========
-define('COUNTR_DIR', __DIR__);
+define('counto_DIR', __DIR__);
 require_once __DIR__ . '/inc/autoload.php';
 require_once __DIR__ . '/inc/Visitor.php';
 require_once __DIR__ . '/inc/Tracker.php';
@@ -185,7 +185,7 @@ switch ($format) {
  */
 function exportJSON(array $rangeData, array $summaryData, string $from, string $to): void
 {
-    $filename = 'countr_export_' . $from . '_to_' . $to . '.json';
+    $filename = 'counto_export_' . $from . '_to_' . $to . '.json';
 
     header('Content-Type: application/json; charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -217,7 +217,7 @@ function exportJSON(array $rangeData, array $summaryData, string $from, string $
 function exportCSV(array $rangeData, array $summaryData, string $from, string $to, bool $excelMode = false): void
 {
     $ext = $excelMode ? 'csv' : 'csv'; // Excel reads .csv files with BOM
-    $filename = 'countr_export_' . $from . '_to_' . $to . '.' . $ext;
+    $filename = 'counto_export_' . $from . '_to_' . $to . '.' . $ext;
 
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename="' . $filename . '"');

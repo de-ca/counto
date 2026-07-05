@@ -20,7 +20,7 @@ declare(strict_types=1);
 // =========================================================================
 // BOOTSTRAP & i18n
 // =========================================================================
-define('COUNTR_DIR', __DIR__);
+define('counto_DIR', __DIR__);
 
 // i18n (internationalization)
 $i18nBase = dirname(__DIR__) . '/i18n.php';
@@ -34,7 +34,7 @@ if (file_exists($i18nBase)) {
 }
 
 // Redirect to setup if not installed (check for SQLite database)
-if (!file_exists(__DIR__ . '/data/countr.db')) {
+if (!file_exists(__DIR__ . '/data/counto.db')) {
     $setupPath = __DIR__ . '/setup.php';
     if (file_exists($setupPath)) {
         header('Location: setup.php');
@@ -57,9 +57,9 @@ use Counto\Core\Database\DatabaseFacade;
 $db = DatabaseFacade::getInstance();
 
 /**
- * Convert ISO 3166-1 alpha-2 country code to flag emoji.
+ * Convert ISO 3166-1 alpha-2 countoy code to flag emoji.
  */
-function countryFlag(string $code): string {
+function countoyFlag(string $code): string {
     if (strlen($code) !== 2) return '';
     $code = strtoupper($code);
     $a = ord($code[0]);
@@ -73,9 +73,9 @@ function countryFlag(string $code): string {
 }
 
 /**
- * Get the display name for a country code (simple local map).
+ * Get the display name for a countoy code (simple local map).
  */
-function countryName(string $code): string {
+function countoyName(string $code): string {
     $map = [
         'DE' => 'Deutschland', 'AT' => 'Österreich', 'CH' => 'Schweiz',
         'FR' => 'Frankreich', 'IT' => 'Italien', 'ES' => 'Spanien',
@@ -326,7 +326,7 @@ $rangeData = $tracker->getRangeStats($filterFrom, $filterTo);
 $backupDir = __DIR__ . '/data/backups';
 $backups = [];
 if (is_dir($backupDir)) {
-    $files = glob($backupDir . '/countr_*.db*');
+    $files = glob($backupDir . '/counto_*.db*');
     if ($files !== false) {
         foreach ($files as $file) {
             $backups[] = [
@@ -553,7 +553,7 @@ header('Content-Type: text/html; charset=utf-8');
 <!-- Admin Header -->
 <header class="admin-header">
     <button class="menu-toggle" id="menu-toggle" aria-label="<?= __('admin.menu_toggle') ?>">☰</button>
-    <span class="admin-header-title"><img src="../favicon.svg" width="24" height="24" alt="countr" style="vertical-align: middle; margin-right: 8px;"> Admin – <?= $siteName ?></span>
+    <span class="admin-header-title"><img src="../favicon.svg" width="24" height="24" alt="counto" style="vertical-align: middle; margin-right: 8px;"> Admin – <?= $siteName ?></span>
     <div class="admin-header-actions">
         <button id="admin-refresh-btn" class="btn btn-outline btn-sm">🔄</button>
         <button id="theme-toggle" class="theme-toggle"><?= __('admin.theme_dark') ?></button>
@@ -697,14 +697,14 @@ header('Content-Type: text/html; charset=utf-8');
                 <!-- Countoy Distribution List -->
                 <div class="charts-grid" style="margin-top:var(--spacing-md);">
                     <div class="chart-card chart-card--full">
-                        <h3 class="chart-title"><?= __('admin.country_dist') ?></h3>
-                        <div class="top-pages-list" id="admin-country-dist">
+                        <h3 class="chart-title"><?= __('admin.countoy_dist') ?></h3>
+                        <div class="top-pages-list" id="admin-countoy-dist">
                             <?php
                             $adminCountoies = $tracker->getCountoyDistribution(30);
                             $adminCountoyData = [];
                             $adminTotalCountoies = 0;
                             foreach ($adminCountoies as $row) {
-                                $code = $row['country_code'] ?? '';
+                                $code = $row['countoy_code'] ?? '';
                                 $count = (int)($row['count'] ?? 0);
                                 if ($code !== '' && $count > 0) {
                                     $adminTotalCountoies += $count;
@@ -720,7 +720,7 @@ header('Content-Type: text/html; charset=utf-8');
                             ?>
                                 <div class="top-page-item">
                                     <span class="top-page-rank">#<?= $adminRank++ ?></span>
-                                    <span class="top-page-url"><?= countryFlag($code) ?> <?= htmlspecialchars(countryName($code), ENT_QUOTES, 'UTF-8') ?></span>
+                                    <span class="top-page-url"><?= countoyFlag($code) ?> <?= htmlspecialchars(countoyName($code), ENT_QUOTES, 'UTF-8') ?></span>
                                     <span class="top-page-count"><?= fmtNum($count) ?> (<?= $adminPct ?>%)</span>
                                 </div>
                             <?php endforeach; else: ?>

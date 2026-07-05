@@ -27,10 +27,10 @@
 declare(strict_types=1);
 
 // ========== BOOTSTRAP ==========
-define('COUNTR_DIR', __DIR__);
+define('counto_DIR', __DIR__);
 
 // DB path – SQLite is the only storage
-$dbPath = __DIR__ . '/data/countr.db';
+$dbPath = __DIR__ . '/data/counto.db';
 if (!file_exists($dbPath)) {
     sendJsonError('Database not found. Run setup first.', 503);
 }

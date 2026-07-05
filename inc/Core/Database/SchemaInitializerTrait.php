@@ -97,7 +97,7 @@ trait SchemaInitializerTrait
             device_type VARCHAR(20),
             screen_size VARCHAR(20),
             language VARCHAR(10),
-            country_code CHAR(2),
+            countoy_code CHAR(2),
             is_bot BOOLEAN DEFAULT 0
         )');
 

@@ -224,7 +224,7 @@ trait StatisticsTrait
     }
 
     /**
-     * Get country distribution from visitors table.
+     * Get countoy distribution from visitors table.
      *
      * @param int $days Lookback period
      * @return array

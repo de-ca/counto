@@ -59,7 +59,7 @@ trait MaintenanceTrait
         // Generate backup filename
         if ($backupPath === null) {
             $timestamp = date('Ymd_His');
-            $backupPath = $this->backupDir . '/countr_' . $timestamp . '.db.gz';
+            $backupPath = $this->backupDir . '/counto_' . $timestamp . '.db.gz';
         }
 
         try {
@@ -344,7 +344,7 @@ trait MaintenanceTrait
      */
     protected function cleanupOldBackups(): void
     {
-        $files = glob($this->backupDir . '/countr_*.db*');
+        $files = glob($this->backupDir . '/counto_*.db*');
         if ($files === false || count($files) <= $this->maxBackups) {
             return;
         }

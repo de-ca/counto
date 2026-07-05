@@ -347,7 +347,7 @@ declare(strict_types=1);
                     <div class="alert alert-info" style="margin-top:1.5rem;">
                         <strong>📝 Manuelle Installation (Fallback):</strong><br>
                         Falls die automatische Behebung nicht funktioniert, führen Sie folgende Befehle auf Ihrem Server aus:
-                        <pre><code>cd <?= htmlspecialchars(COUNTR_DIR) ?>
+                        <pre><code>cd <?= htmlspecialchars(COUNTO_DIR) ?>
 
                         # Verzeichnisse erstellen
                         mkdir -p data data/visitors data/sessions data/logs data/backups data/exports cache

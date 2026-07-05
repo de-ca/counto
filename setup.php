@@ -21,10 +21,10 @@ declare(strict_types=1);
 // already configured. The setup script MUST NOT be accessible on a
 // public webspace – it would allow an attacker to reset the admin
 // password and take over the analytics installation.
-defined('COUNTR_DIR') or define('COUNTR_DIR', __DIR__);
-$setupLockFile = COUNTR_DIR . '/data/.setup_done';
-$configFile    = COUNTR_DIR . '/data/config.json';
-$databaseFile  = COUNTR_DIR . '/data/countr.db';
+defined('counto_DIR') or define('counto_DIR', __DIR__);
+$setupLockFile = counto_DIR . '/data/.setup_done';
+$configFile    = counto_DIR . '/data/config.json';
+$databaseFile  = counto_DIR . '/data/counto.db';
 
 if (file_exists($databaseFile) || file_exists($setupLockFile) || file_exists($configFile)) {
     http_response_code(403);
@@ -73,7 +73,7 @@ function autoFixOnFirstLoad(): void
 
     // --- STEP 1: Ensure data/ and cache/ exist ---
     foreach ($criticalDirs as $dir) {
-        $path = COUNTR_DIR . '/' . $dir;
+        $path = counto_DIR . '/' . $dir;
         if (!is_dir($path)) {
             if (!@mkdir($path, 0775, true)) {
                 $errors[] = "Konnte Berechtigungen nicht automatisch setzen. Bitte stellen Sie sicher, dass das Verzeichnis $dir für den Webserver schreibbar ist.";
@@ -90,7 +90,7 @@ function autoFixOnFirstLoad(): void
 
     // --- STEP 2: Check writability and try to fix ---
     foreach ($criticalDirs as $dir) {
-        $path = COUNTR_DIR . '/' . $dir;
+        $path = counto_DIR . '/' . $dir;
 
         if (!is_writable($path)) {
             // Try chmod 0775 first
@@ -118,9 +118,9 @@ function autoFixOnFirstLoad(): void
         . "</IfModule>\n";
 
     foreach ($protectedDirs as $dir) {
-        $htaccessPath = COUNTR_DIR . '/' . $dir . '/.htaccess';
+        $htaccessPath = counto_DIR . '/' . $dir . '/.htaccess';
         if (!file_exists($htaccessPath)) {
-            if (is_writable(COUNTR_DIR . '/' . $dir)) {
+            if (is_writable(counto_DIR . '/' . $dir)) {
                 @file_put_contents($htaccessPath, $htaccessContent);
             }
             // If dir itself isn't writable, we already reported that above
@@ -170,7 +170,7 @@ function renderAutoFixError(array $errors): void
     }
 
     echo '<p><strong>Manuelle Lösung:</strong> Führen Sie folgende Befehle auf Ihrem Server aus:</p>';
-    echo '<div class="cmd">cd ' . htmlspecialchars(COUNTR_DIR, ENT_QUOTES, 'UTF-8') . "\nchmod -R 775 data cache\nfind data cache -type d -exec chmod 775 {} \\;\nfind data cache -type f -exec chmod 664 {} \\;</div>";
+    echo '<div class="cmd">cd ' . htmlspecialchars(counto_DIR, ENT_QUOTES, 'UTF-8') . "\nchmod -R 775 data cache\nfind data cache -type d -exec chmod 775 {} \\;\nfind data cache -type f -exec chmod 664 {} \\;</div>";
     echo '<p style="font-size:0.9rem;color:#999;">Laden Sie diese Seite anschließend neu.</p>';
     echo '</div></body></html>';
     exit;
@@ -306,20 +306,20 @@ function performSetup(array $settings): array
 
     $htaccessDirs = ['data', 'cache', 'data/backups', 'data/logs'];
     foreach ($htaccessDirs as $dir) {
-        @file_put_contents(COUNTR_DIR . '/' . $dir . '/.htaccess', $dataHtaccess);
+        @file_put_contents(counto_DIR . '/' . $dir . '/.htaccess', $dataHtaccess);
     }
 
     // 3. CREATE index.html FILES (prevent directory listing)
     $indexHtml = '<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><title>403</title></head><body><h1>403 Forbidden</h1><p>Direct access to this directory is not allowed.</p></body></html>';
     $indexDirs = ['data', 'cache', 'data/visitors', 'data/sessions', 'data/logs', 'data/backups', 'data/exports'];
     foreach ($indexDirs as $dir) {
-        @file_put_contents(COUNTR_DIR . '/' . $dir . '/index.html', $indexHtml);
+        @file_put_contents(counto_DIR . '/' . $dir . '/index.html', $indexHtml);
     }
 
     // 4. CREATE config.json
     $apiKey = null;
     if ($settings['generate_api_key']) {
-        $apiKey = 'countr_' . bin2hex(random_bytes(24));
+        $apiKey = 'counto_' . bin2hex(random_bytes(24));
     }
 
     $config = [
@@ -372,16 +372,16 @@ function performSetup(array $settings): array
         return $result;
     }
 
-    if (@file_put_contents(COUNTR_DIR . '/data/config.json', $configJson, LOCK_EX) === false) {
+    if (@file_put_contents(counto_DIR . '/data/config.json', $configJson, LOCK_EX) === false) {
         $result['error'] = 'Kann data/config.json nicht schreiben. Bitte prüfen Sie die Schreibrechte.';
         return $result;
     }
-    @chmod(COUNTR_DIR . '/data/config.json', 0644);
+    @chmod(counto_DIR . '/data/config.json', 0644);
 
     $result['api_key'] = $apiKey;
 
     // 4b. WRITE inc/config.php FOR THE LANDING PAGE
-    $rootConfigFile = dirname(COUNTR_DIR) . '/inc/config.php';
+    $rootConfigFile = dirname(counto_DIR) . '/inc/config.php';
     $rootConfigContent = "<?php\nreturn [\n    'base_url' => " . var_export($settings['site_url'], true) . ",\n    'api_key'  => " . var_export($apiKey, true) . ",\n];\n";
     @file_put_contents($rootConfigFile, $rootConfigContent, LOCK_EX);
     @chmod($rootConfigFile, 0644);
@@ -406,8 +406,8 @@ function performSetup(array $settings): array
         ],
     ];
 
-    @file_put_contents(COUNTR_DIR . '/data/stats.json', json_encode($stats, JSON_PRETTY_PRINT), LOCK_EX);
-    @chmod(COUNTR_DIR . '/data/stats.json', 0644);
+    @file_put_contents(counto_DIR . '/data/stats.json', json_encode($stats, JSON_PRETTY_PRINT), LOCK_EX);
+    @chmod(counto_DIR . '/data/stats.json', 0644);
 
     // 6. CREATE TODAY'S VISITOR FILE
     $today   = date('Y-m-d');
@@ -431,16 +431,16 @@ function performSetup(array $settings): array
         '_pages'           => [],
     ];
     @file_put_contents(
-        COUNTR_DIR . '/data/visitors/' . $today . '.json',
+        counto_DIR . '/data/visitors/' . $today . '.json',
         json_encode($dayData, JSON_PRETTY_PRINT),
         LOCK_EX
     );
-    @chmod(COUNTR_DIR . '/data/visitors/' . $today . '.json', 0644);
+    @chmod(counto_DIR . '/data/visitors/' . $today . '.json', 0644);
 
     // 7. CREATE .gitkeep IN EMPTY DIRS
     $gitkeepDirs = ['data/logs', 'data/backups', 'data/exports', 'data/sessions', 'cache'];
     foreach ($gitkeepDirs as $dir) {
-        @file_put_contents(COUNTR_DIR . '/' . $dir . '/.gitkeep', '');
+        @file_put_contents(counto_DIR . '/' . $dir . '/.gitkeep', '');
     }
 
     // 8. GENERATE DEMO DATA (if requested)
@@ -451,14 +451,14 @@ function performSetup(array $settings): array
 
     // 9. CREATE BACKUP OF INITIAL STATE
     $backupName = 'data/backups/setup_' . date('Ymd_His') . '.json';
-    @file_put_contents(COUNTR_DIR . '/' . $backupName, $configJson, LOCK_EX);
+    @file_put_contents(counto_DIR . '/' . $backupName, $configJson, LOCK_EX);
 
     // 10. MARK SETUP AS DONE
-    @file_put_contents(COUNTR_DIR . '/data/.setup_done', date('Y-m-d H:i:s'));
-    @chmod(COUNTR_DIR . '/data/.setup_done', 0644);
+    @file_put_contents(counto_DIR . '/data/.setup_done', date('Y-m-d H:i:s'));
+    @chmod(counto_DIR . '/data/.setup_done', 0644);
 
     // 11. DEACTIVATE setup.php
-    @rename(COUNTR_DIR . '/setup.php', COUNTR_DIR . '/setup.php.disabled');
+    @rename(counto_DIR . '/setup.php', counto_DIR . '/setup.php.disabled');
 
     $result['success'] = true;
     return $result;
@@ -545,20 +545,20 @@ function generateDemoData(): void
         }
 
         @file_put_contents(
-            COUNTR_DIR . '/data/visitors/' . $date . '.json',
+            counto_DIR . '/data/visitors/' . $date . '.json',
             json_encode($dayData, JSON_PRETTY_PRINT),
             LOCK_EX
         );
-        @chmod(COUNTR_DIR . '/data/visitors/' . $date . '.json', 0644);
+        @chmod(counto_DIR . '/data/visitors/' . $date . '.json', 0644);
     }
 
     // Update stats.json with demo totals
-    $stats  = json_decode(@file_get_contents(COUNTR_DIR . '/data/stats.json') ?: '{}', true) ?: [];
+    $stats  = json_decode(@file_get_contents(counto_DIR . '/data/stats.json') ?: '{}', true) ?: [];
     $totals = ['visitors' => 0, 'pageviews' => 0, 'unique_visitors' => 0];
 
     for ($daysAgo = 30; $daysAgo >= 0; $daysAgo--) {
         $date    = date('Y-m-d', strtotime("-{$daysAgo} days"));
-        $dayFile = COUNTR_DIR . '/data/visitors/' . $date . '.json';
+        $dayFile = counto_DIR . '/data/visitors/' . $date . '.json';
         if (file_exists($dayFile)) {
             $dayJson                    = json_decode(@file_get_contents($dayFile) ?: '{}', true) ?: [];
             $totals['visitors']        += $dayJson['summary']['visitors'] ?? 0;
@@ -568,7 +568,7 @@ function generateDemoData(): void
     }
 
     $stats['totals'] = $totals;
-    @file_put_contents(COUNTR_DIR . '/data/stats.json', json_encode($stats, JSON_PRETTY_PRINT), LOCK_EX);
+    @file_put_contents(counto_DIR . '/data/stats.json', json_encode($stats, JSON_PRETTY_PRINT), LOCK_EX);
 }
 
 // ========== CREATE DIRECTORIES (AJAX-capable) ==========
@@ -588,7 +588,7 @@ function createDirectories(): array
     $allSuccess = true;
 
     foreach ($directories as $dir) {
-        $path = COUNTR_DIR . '/' . $dir;
+        $path = counto_DIR . '/' . $dir;
 
         if (!is_dir($path)) {
             if (@mkdir($path, 0755, true)) {
@@ -634,7 +634,7 @@ function checkDirectoryPermissions(): array
     $allOk   = true;
 
     foreach ($dirs as $dir) {
-        $path = COUNTR_DIR . '/' . $dir;
+        $path = counto_DIR . '/' . $dir;
 
         if (!is_dir($path)) {
             $results[$dir] = [
@@ -681,7 +681,7 @@ function fixPermissions(): array
     $allOk   = true;
 
     foreach ($dirs as $dir) {
-        $path = COUNTR_DIR . '/' . $dir;
+        $path = counto_DIR . '/' . $dir;
         if (is_dir($path)) {
             if (@chmod($path, 0755)) {
                 $results[$dir] = [
@@ -723,7 +723,7 @@ function fixAllPermissions(): array
     ];
 
     foreach ($directories as $dir) {
-        $path = COUNTR_DIR . '/' . $dir;
+        $path = counto_DIR . '/' . $dir;
         if (!is_dir($path)) {
             $summary['results'][$dir] = [
                 'status'  => 'missing',
@@ -749,7 +749,7 @@ function fixAllPermissions(): array
     }
 
     // Log the operation
-    $logDir = COUNTR_DIR . '/data/logs';
+    $logDir = counto_DIR . '/data/logs';
     if (is_dir($logDir) && is_writable($logDir)) {
         $logEntry = date('Y-m-d H:i:s') . ' | fix_permissions_all | '
             . 'dirs: ' . $summary['fixed_dirs'] . '/' . $summary['total_dirs']
@@ -808,7 +808,7 @@ function setRecursivePermissions(string $dir, int $dirPerm = 0755, int $filePerm
                     $result['success']        = false;
                     $error                     = error_get_last();
                     $result['failed_items'][] = [
-                        'path'  => str_replace(COUNTR_DIR . '/', '', $path),
+                        'path'  => str_replace(counto_DIR . '/', '', $path),
                         'type'  => 'dir',
                         'error' => $error['message'] ?? 'chmod fehlgeschlagen',
                     ];
@@ -822,7 +822,7 @@ function setRecursivePermissions(string $dir, int $dirPerm = 0755, int $filePerm
                     $result['success']        = false;
                     $error                     = error_get_last();
                     $result['failed_items'][] = [
-                        'path'  => str_replace(COUNTR_DIR . '/', '', $path),
+                        'path'  => str_replace(counto_DIR . '/', '', $path),
                         'type'  => 'file',
                         'error' => $error['message'] ?? 'chmod fehlgeschlagen',
                     ];
@@ -873,8 +873,8 @@ function getSystemStatus(): array
     ];
 
     // Data directory writable
-    $dataDir                   = COUNTR_DIR . '/data';
-    $dataWritable              = is_dir($dataDir) ? is_writable($dataDir) : is_writable(COUNTR_DIR);
+    $dataDir                   = counto_DIR . '/data';
+    $dataWritable              = is_dir($dataDir) ? is_writable($dataDir) : is_writable(counto_DIR);
     $checks['data_writable']   = [
         'name'        => 'Schreibrechte (data/)',
         'required'    => 'Schreibbar',
@@ -938,8 +938,8 @@ function getSystemStatus(): array
     ];
 
     // Cache directory
-    $cacheDir                  = COUNTR_DIR . '/cache';
-    $cacheOk                   = is_dir($cacheDir) ? is_writable($cacheDir) : is_writable(COUNTR_DIR);
+    $cacheDir                  = counto_DIR . '/cache';
+    $cacheOk                   = is_dir($cacheDir) ? is_writable($cacheDir) : is_writable(counto_DIR);
     $checks['cache_writable']  = [
         'name'        => 'Schreibrechte (cache/)',
         'required'    => 'Schreibbar',

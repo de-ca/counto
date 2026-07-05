@@ -13,7 +13,7 @@
 
 declare(strict_types=1);
 
-define('COUNTR_DIR', __DIR__);
+define('COUNTO_DIR', __DIR__);
 
 /**
  * Check a single directory: exists, permissions, writable
@@ -82,7 +82,7 @@ function checkRecursive(string $dir): array
 
         foreach ($iterator as $item) {
             $path = $item->getPathname();
-            $relPath = str_replace(COUNTR_DIR . '/', '', $path);
+            $relPath = str_replace(COUNTO_DIR . '/', '', $path);
 
             if ($item->isDir()) {
                 $result['total_dirs']++;
@@ -126,7 +126,7 @@ $hasProblems = false;
 $hasMissing = false;
 
 foreach ($requiredDirs as $dir => $required) {
-    $path = COUNTR_DIR . '/' . $dir;
+    $path = COUNTO_DIR . '/' . $dir;
     $result = checkDir($path, $required);
     $dirResults[$dir] = $result;
 
@@ -140,8 +140,8 @@ foreach ($requiredDirs as $dir => $required) {
 }
 
 // ========== RECURSIVE CHECK ==========
-$dataRecursive = checkRecursive(COUNTR_DIR . '/data');
-$cacheRecursive = checkRecursive(COUNTR_DIR . '/cache');
+$dataRecursive = checkRecursive(COUNTO_DIR . '/data');
+$cacheRecursive = checkRecursive(COUNTO_DIR . '/cache');
 
 $totalBad = count($dataRecursive['bad_dirs']) + count($dataRecursive['bad_files'])
           + count($cacheRecursive['bad_dirs']) + count($cacheRecursive['bad_files']);
@@ -326,7 +326,7 @@ header('Content-Type: text/html; charset=utf-8');
         <h2>📋 Manuelle Korrektur-Befehle</h2>
         <p style="margin-bottom:8px;">Führen Sie folgende Befehle auf Ihrem Server aus:</p>
         <pre><code># In das Counto Analytics-Verzeichnis wechseln
-cd <?= htmlspecialchars(COUNTR_DIR) ?>
+cd <?= htmlspecialchars(COUNTO_DIR) ?>
 
 # Rekursive Rechte setzen:
 # Verzeichnisse: 755 (rwxr-xr-x)

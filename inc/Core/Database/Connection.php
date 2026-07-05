@@ -60,13 +60,13 @@ class Connection
     // =========================================================================
 
     /**
-     * @param string|null $dbPath    Path to SQLite database (defaults to /var/www/html/countr/data/countr.db)
-     * @param string|null $backupDir Path to backup directory (defaults to /var/www/html/countr/data/backups)
+     * @param string|null $dbPath    Path to SQLite database (defaults to /var/www/html/counto/data/counto.db)
+     * @param string|null $backupDir Path to backup directory (defaults to /var/www/html/counto/data/backups)
      */
     public function __construct(?string $dbPath = null, ?string $backupDir = null)
     {
-        $this->dbPath = $dbPath ?? '/var/www/html/countr/data/countr.db';
-        $this->backupDir = $backupDir ?? '/var/www/html/countr/data/backups';
+        $this->dbPath = $dbPath ?? '/var/www/html/counto/data/counto.db';
+        $this->backupDir = $backupDir ?? '/var/www/html/counto/data/backups';
     }
 
     // =========================================================================
@@ -178,7 +178,7 @@ class Connection
             // Load settings into cache
             $this->loadSettings();
 
-            // Ensure country_code column exists (migration for v1.7.0)
+            // Ensure countoy_code column exists (migration for v1.7.0)
             $this->ensureCountoyCodeColumn();
 
             return true;
@@ -341,7 +341,7 @@ class Connection
         // Generate backup filename
         if ($backupPath === null) {
             $timestamp = date('Ymd_His');
-            $backupPath = $this->backupDir . '/countr_' . $timestamp . '.db.gz';
+            $backupPath = $this->backupDir . '/counto_' . $timestamp . '.db.gz';
         }
 
         try {
@@ -535,7 +535,7 @@ class Connection
      */
     private function cleanupOldBackups(): void
     {
-        $files = glob($this->backupDir . '/countr_*.db*');
+        $files = glob($this->backupDir . '/counto_*.db*');
         if ($files === false || count($files) <= $this->maxBackups) {
             return;
         }
@@ -551,10 +551,10 @@ class Connection
     }
 
     /**
-     * Ensure the country_code column exists in the visitors table.
+     * Ensure the countoy_code column exists in the visitors table.
      *
      * This is a lightweight migration for existing databases that were created
-     * before the country_code field was introduced. Uses ALTER TABLE ADD COLUMN
+     * before the countoy_code field was introduced. Uses ALTER TABLE ADD COLUMN
      * which is safe for SQLite — it won't affect existing data.
      */
     private function ensureCountoyCodeColumn(): void
@@ -564,7 +564,7 @@ class Connection
         }
 
         try {
-            // Check if country_code column already exists
+            // Check if countoy_code column already exists
             $result = $this->pdo->query("PRAGMA table_info('visitors')");
             $columns = [];
             if ($result !== false) {
@@ -573,12 +573,12 @@ class Connection
                 }
             }
 
-            if (!in_array('country_code', $columns, true)) {
-                $this->pdo->exec('ALTER TABLE visitors ADD COLUMN country_code CHAR(2)');
-                $this->log('Migration: Added country_code column to visitors table');
+            if (!in_array('countoy_code', $columns, true)) {
+                $this->pdo->exec('ALTER TABLE visitors ADD COLUMN countoy_code CHAR(2)');
+                $this->log('Migration: Added countoy_code column to visitors table');
             }
         } catch (\PDOException $e) {
-            $this->log('Migration warning: Could not add country_code column: ' . $e->getMessage());
+            $this->log('Migration warning: Could not add countoy_code column: ' . $e->getMessage());
         }
     }
 

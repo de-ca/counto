@@ -430,7 +430,7 @@ class DatabaseFacade implements DatabaseInterface
     }
 
     /**
-     * Get country distribution based on visitor country_code.
+     * Get countoy distribution based on visitor countoy_code.
      *
      * @param int $days Lookback period
      * @return array

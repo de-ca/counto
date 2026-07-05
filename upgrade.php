@@ -13,7 +13,7 @@
 
 declare(strict_types=1);
 
-define('COUNTR_DIR', __DIR__);
+define('COUNTO_DIR', __DIR__);
 
 // ========== HEADER ==========
 header('Content-Type: text/html; charset=utf-8');
@@ -87,7 +87,7 @@ $dirs = [
 ];
 
 foreach ($dirs as $dir => $required) {
-    $path = COUNTR_DIR . '/' . $dir;
+    $path = COUNTO_DIR . '/' . $dir;
     if (!is_dir($path)) {
         if (@mkdir($path, 0755, true)) {
             logMsg("Verzeichnis erstellt: {$dir}", 'ok');
@@ -101,7 +101,7 @@ foreach ($dirs as $dir => $required) {
 
 // ========== STEP 2: CHECK CONFIG ==========
 logMsg('Prüfe Konfiguration...', 'info');
-$configFile = COUNTR_DIR . '/data/config.json';
+$configFile = COUNTO_DIR . '/data/config.json';
 
 if (file_exists($configFile)) {
     $config = json_decode(@file_get_contents($configFile) ?: '{}', true) ?: [];
@@ -180,7 +180,7 @@ $dirsToProtect = ['data', 'data/visitors', 'data/sessions', 'data/logs', 'data/b
 $htaccessContent = "# Deny direct access\n<IfModule mod_authz_core.c>\n    Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n    Order allow,deny\n    Deny from all\n</IfModule>\n";
 
 foreach ($dirsToProtect as $dir) {
-    $htaccessPath = COUNTR_DIR . '/' . $dir . '/.htaccess';
+    $htaccessPath = COUNTO_DIR . '/' . $dir . '/.htaccess';
     if (!file_exists($htaccessPath)) {
         @file_put_contents($htaccessPath, $htaccessContent);
         logMsg(".htaccess erstellt: {$dir}/", 'ok');
@@ -190,7 +190,7 @@ foreach ($dirsToProtect as $dir) {
 
 // ========== STEP 4: PROTECT setup.php ==========
 logMsg('Prüfe setup.php Sicherheit...', 'info');
-$setupPath = COUNTR_DIR . '/setup.php';
+$setupPath = COUNTO_DIR . '/setup.php';
 if (file_exists($setupPath)) {
     logMsg('WARNUNG: setup.php ist noch aktiv! Aus Sicherheitsgründen deaktivieren.', 'warn');
     $warnings++;
@@ -200,7 +200,7 @@ if (file_exists($setupPath)) {
 logMsg('Prüfe Dateirechte...', 'info');
 $writableDirs = ['data', 'cache'];
 foreach ($writableDirs as $dir) {
-    $path = COUNTR_DIR . '/' . $dir;
+    $path = COUNTO_DIR . '/' . $dir;
     if (is_dir($path) && !is_writable($path)) {
         @chmod($path, 0755);
         if (is_writable($path)) {
@@ -228,7 +228,7 @@ $requiredFiles = [
 ];
 
 foreach ($requiredFiles as $file) {
-    $path = COUNTR_DIR . '/' . $file;
+    $path = COUNTO_DIR . '/' . $file;
     if (!file_exists($path)) {
         logMsg("FEHLT: {$file}", 'err');
         $errors++;

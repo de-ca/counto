@@ -203,7 +203,7 @@ class AnalyticsQueries
     }
 
     /**
-     * Get country distribution based on visitor country_code.
+     * Get countoy distribution based on visitor countoy_code.
      *
      * @param int $days Lookback period
      * @return array
@@ -212,21 +212,21 @@ class AnalyticsQueries
     {
         if ($days > 0) {
             return $this->qb->query(
-                'SELECT COALESCE(v.country_code, \'\') as country_code, COUNT(DISTINCT v.id) as count
+                'SELECT COALESCE(v.countoy_code, \'\') as countoy_code, COUNT(DISTINCT v.id) as count
                  FROM visitors v
                  JOIN visits vs ON v.id = vs.visitor_id
                  WHERE vs.timestamp >= datetime(\'now\', :offset) AND v.is_bot = 0
-                 GROUP BY v.country_code
+                 GROUP BY v.countoy_code
                  ORDER BY count DESC',
                 [':offset' => "-{$days} days"]
             );
         }
 
         return $this->qb->query(
-            'SELECT COALESCE(country_code, \'\') as country_code, COUNT(*) as count
+            'SELECT COALESCE(countoy_code, \'\') as countoy_code, COUNT(*) as count
              FROM visitors
              WHERE is_bot = 0
-             GROUP BY country_code
+             GROUP BY countoy_code
              ORDER BY count DESC'
         );
     }

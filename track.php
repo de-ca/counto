@@ -19,8 +19,8 @@ if (function_exists('opcache_invalidate')) { @opcache_invalidate(__FILE__, true)
  */
 
 // ========== CONFIGURATION ==========
-define('COUNTR_START', microtime(true));
-define('COUNTR_DIR', __DIR__);
+define('counto_START', microtime(true));
+define('counto_DIR', __DIR__);
 
 // ========== BOOTSTRAP (SQLite-based, minimal) ==========
 require_once __DIR__ . '/inc/autoload.php';
@@ -126,17 +126,17 @@ if ($page === null) {
 $referrer = $_GET['ref'] ?? $_GET['referrer'] ?? ($_SERVER['HTTP_REFERER'] ?? '');
 
 // ---- FILTER: Reject self-tracking calls to track.php itself ----
-// Direct calls to /countr/track.php, /countr/track.php?js=1 or any
+// Direct calls to /counto/track.php, /counto/track.php?js=1 or any
 // URL that resolves to the tracker script itself MUST NOT be logged
 // as a valid pageview. This prevents garbage data from bots,
 // misconfigured script embeds, or direct browser hits.
-$trackerPath = '/countr/track.php';
+$trackerPath = '/counto/track.php';
 $requestUri = parse_url($page, PHP_URL_PATH) ?? $page;
 if ($requestUri !== null && $requestUri !== '') {
     $normalizedRequest = '/' . ltrim($requestUri, '/');
     $normalizedTracker = '/' . ltrim($trackerPath, '/');
     if (
-        // Exact match: /countr/track.php
+        // Exact match: /counto/track.php
         $normalizedRequest === $normalizedTracker
         // Also catch bare /track.php calls (e.g. when installed at docroot)
         || $normalizedRequest === '/track.php'
@@ -173,7 +173,7 @@ if (!$visitor->isBot() || !$ignoreBots) {
         $deviceType    = $visitor->getDeviceType();
         $screenSize    = $visitor->getScreenSize();
         $language      = $visitor->getLanguage();
-        $countryCode   = $visitor->getCountoyCode();
+        $countoyCode   = $visitor->getCountoyCode();
         $isBot         = $visitor->isBot() ? 1 : 0;
 
         $referrerDomain = '';
@@ -213,7 +213,7 @@ if (!$visitor->isBot() || !$ignoreBots) {
                     device_type = :device_type,
                     screen_size = :screen_size,
                     language = :language,
-                    country_code = :country_code,
+                    countoy_code = :countoy_code,
                     is_bot = :is_bot
                 WHERE id = :id',
                 [
@@ -225,7 +225,7 @@ if (!$visitor->isBot() || !$ignoreBots) {
                     ':device_type'     => $deviceType,
                     ':screen_size'     => $screenSize,
                     ':language'        => $language,
-                    ':country_code'    => $countryCode,
+                    ':countoy_code'    => $countoyCode,
                     ':is_bot'          => $isBot,
                     ':id'              => $visitorId,
                 ]
@@ -233,8 +233,8 @@ if (!$visitor->isBot() || !$ignoreBots) {
         } else {
             // Insert new visitor
             $visitorId = (int) $db->insertAndGetId(
-                'INSERT INTO visitors (visitor_hash, ip_hash, user_agent, browser, browser_version, os, device_type, screen_size, language, country_code, is_bot)
-                 VALUES (:visitor_hash, :ip_hash, :user_agent, :browser, :browser_version, :os, :device_type, :screen_size, :language, :country_code, :is_bot)',
+                'INSERT INTO visitors (visitor_hash, ip_hash, user_agent, browser, browser_version, os, device_type, screen_size, language, countoy_code, is_bot)
+                 VALUES (:visitor_hash, :ip_hash, :user_agent, :browser, :browser_version, :os, :device_type, :screen_size, :language, :countoy_code, :is_bot)',
                 [
                     ':visitor_hash'    => $visitorHash,
                     ':ip_hash'         => $ipHash,
@@ -245,7 +245,7 @@ if (!$visitor->isBot() || !$ignoreBots) {
                     ':device_type'     => $deviceType,
                     ':screen_size'     => $screenSize,
                     ':language'        => $language,
-                    ':country_code'    => $countryCode,
+                    ':countoy_code'    => $countoyCode,
                     ':is_bot'          => $isBot,
                 ]
             );
@@ -339,7 +339,7 @@ switch ($format) {
  */
 function sendResponse(string $type, ?array $data = null): void
 {
-    $elapsed = round((microtime(true) - COUNTR_START) * 1000, 2);
+    $elapsed = round((microtime(true) - counto_START) * 1000, 2);
 
     switch ($type) {
         case 'json':

@@ -17,7 +17,7 @@ declare(strict_types=1);
 // =========================================================================
 // BOOTSTRAP
 // =========================================================================
-define('COUNTR_DIR', __DIR__);
+define('counto_DIR', __DIR__);
 
 // i18n (internationalization)
 $i18nBase = dirname(__DIR__) . '/i18n.php';
@@ -31,7 +31,7 @@ if (file_exists($i18nBase)) {
 }
 
 // Database path — SQLite is the only storage
-$dbPath = __DIR__ . '/data/countr.db';
+$dbPath = __DIR__ . '/data/counto.db';
 
 // Setup detection: redirect to setup if database is missing
 if (!file_exists($dbPath)) {
@@ -112,7 +112,7 @@ $last7Days = $tracker->getLastNDays(7);
 $last30Days = $tracker->getLastNDays(30);
 $topPages = $tracker->getTopPages(5);
 $browsers = $tracker->getBrowserDistribution();
-$countries = $tracker->getCountoyDistribution(30);
+$countoies = $tracker->getCountoyDistribution(30);
 $hourlyDist = $tracker->getHourlyDistribution();
 $online = $tracker->getOnlineCount();
 $bounceRate = $stats->estimateBounceRate();
@@ -177,32 +177,32 @@ foreach ($hourlyDist as &$hRow) {
 }
 unset($hRow);
 
-// Prepare country distribution data for top-list (with flag emoji)
-$countryData = [];
+// Prepare countoy distribution data for top-list (with flag emoji)
+$countoyData = [];
 $totalCountoies = 0;
-foreach ($countries as $row) {
-    $code = $row['country_code'] ?? '';
+foreach ($countoies as $row) {
+    $code = $row['countoy_code'] ?? '';
     $count = (int)($row['count'] ?? 0);
     if ($code !== '' && $count > 0) {
         $totalCountoies += $count;
-        $countryData[$code] = $count;
+        $countoyData[$code] = $count;
     }
 }
-arsort($countryData);
+arsort($countoyData);
 if ($totalCountoies > 0) {
     // Keep only top 10
-    $countryData = array_slice($countryData, 0, 10, true);
+    $countoyData = array_slice($countoyData, 0, 10, true);
     // Calculate percentages
-    foreach ($countryData as $code => $count) {
+    foreach ($countoyData as $code => $count) {
         $pct = round(($count / $totalCountoies) * 100, 1);
-        $countryData[$code] = ['count' => $count, 'pct' => $pct];
+        $countoyData[$code] = ['count' => $count, 'pct' => $pct];
     }
 }
 
 /**
- * Convert ISO 3166-1 alpha-2 country code to SVG flag image.
+ * Convert ISO 3166-1 alpha-2 countoy code to SVG flag image.
  */
-function countryFlag(string $code): string {
+function countoyFlag(string $code): string {
     if (strlen($code) !== 2) return '';
     $code = strtoupper($code);
     $a = ord($code[0]);
@@ -216,9 +216,9 @@ function countryFlag(string $code): string {
 }
 
 /**
- * Get the display name for a country code (simple local map).
+ * Get the display name for a countoy code (simple local map).
  */
-function countryName(string $code): string {
+function countoyName(string $code): string {
     $map = [
         'DE' => 'Deutschland', 'AT' => 'Österreich', 'CH' => 'Schweiz',
         'FR' => 'Frankreich', 'IT' => 'Italien', 'ES' => 'Spanien',
@@ -262,7 +262,7 @@ foreach ($topPages as $page) {
 }
 
 // Build JS i18n bridge for Chart.js labels
-$countrI18n = [
+$countoI18n = [
     'visitors' => __('chart.visitors'),
     'pageviews' => __('chart.pageviews'),
     'no_data' => __('dash.no_data'),
@@ -303,7 +303,7 @@ header('Content-Type: text/html; charset=utf-8');
     <div class="container">
         <div class="header-content">
             <div>
-                <h1 class="header-title"><img src="../favicon.svg" width="24" height="24" alt="countr" style="vertical-align: middle; margin-right: 8px;"><?= $siteName ?></h1>
+                <h1 class="header-title"><img src="../favicon.svg" width="24" height="24" alt="counto" style="vertical-align: middle; margin-right: 8px;"><?= $siteName ?></h1>
                 <p class="header-subtitle"><?= __('dash.title') ?></p>
             </div>
             <div class="header-links">
@@ -397,15 +397,15 @@ header('Content-Type: text/html; charset=utf-8');
     <!-- Countoy Distribution Row -->
     <section class="charts-grid">
         <div class="chart-card chart-card--full">
-            <h2 class="chart-title"><?= __('dash.country_dist') ?></h2>
-            <?php if (empty($countryData)): ?>
+            <h2 class="chart-title"><?= __('dash.countoy_dist') ?></h2>
+            <?php if (empty($countoyData)): ?>
                 <p class="empty-state"><?= __('dash.no_data') ?></p>
             <?php else: ?>
-                <div class="top-pages-list" id="country-dist">
-                    <?php $rank = 1; foreach ($countryData as $code => $info): ?>
+                <div class="top-pages-list" id="countoy-dist">
+                    <?php $rank = 1; foreach ($countoyData as $code => $info): ?>
                         <div class="top-page-item">
                             <span class="top-page-rank">#<?= $rank++ ?></span>
-                            <span class="top-page-url"><?= countryFlag($code) ?> <?= htmlspecialchars(countryName($code), ENT_QUOTES, 'UTF-8') ?></span>
+                            <span class="top-page-url"><?= countoyFlag($code) ?> <?= htmlspecialchars(countoyName($code), ENT_QUOTES, 'UTF-8') ?></span>
                             <span class="top-page-count"><?= number_format((int)$info['count'], 0, ',', '.') ?> (<?= $info['pct'] ?>%)</span>
                         </div>
                     <?php endforeach; ?>
@@ -458,7 +458,7 @@ header('Content-Type: text/html; charset=utf-8');
 
 <!-- i18n bridge for JavaScript (Chart.js labels, dashboard messages) -->
 <script>
-window.CountoI18n = <?= json_encode($countrI18n, JSON_UNESCAPED_UNICODE) ?>;
+window.CountoI18n = <?= json_encode($countoI18n, JSON_UNESCAPED_UNICODE) ?>;
 </script>
 
 <!-- Initial Chart Data (from SQLite via PHP) -->
