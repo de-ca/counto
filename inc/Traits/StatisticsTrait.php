@@ -9,8 +9,8 @@
  *
  * v1.6.0: Removed FileDB backward-compatibility. SQLite is the sole storage engine.
  *
- * @package Countr
- * @copyright  2026 Countr Analytics
+ * @package Counto
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
@@ -229,10 +229,10 @@ trait StatisticsTrait
      * @param int $days Lookback period
      * @return array
      */
-    public function getCountryDistribution(int $days = 30): array
+    public function getCountoyDistribution(int $days = 30): array
     {
         try {
-            return $this->db->getCountryDistribution($days);
+            return $this->db->getCountoyDistribution($days);
         } catch (\Throwable $e) {
             return [];
         }

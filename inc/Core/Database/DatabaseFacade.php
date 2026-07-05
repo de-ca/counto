@@ -9,20 +9,20 @@
  * This allows existing code (Tracker, Visitor, admin.php, tests, etc.) to
  * continue working without changes.
  *
- * @package Countr\Core\Database
- * @copyright  2026 Countr Analytics
+ * @package Counto\Core\Database
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
 
 declare(strict_types=1);
 
-namespace Countr\Core\Database;
+namespace Counto\Core\Database;
 
 use PDO;
 use RuntimeException;
 use Throwable;
-use Countr\Interfaces\DatabaseInterface;
+use Counto\Interfaces\DatabaseInterface;
 
 class DatabaseFacade implements DatabaseInterface
 {
@@ -435,9 +435,9 @@ class DatabaseFacade implements DatabaseInterface
      * @param int $days Lookback period
      * @return array
      */
-    public function getCountryDistribution(int $days = 30): array
+    public function getCountoyDistribution(int $days = 30): array
     {
-        return $this->analytics->getCountryDistribution($days);
+        return $this->analytics->getCountoyDistribution($days);
     }
 
     /**

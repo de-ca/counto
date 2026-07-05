@@ -1,6 +1,6 @@
 <?php
 /**
- * Countr Analytics - Setup Wizard View
+ * Counto Analytics - Setup Wizard View
  *
  * Renders the HTML UI for the setup wizard. All business logic resides
  * in setup.php (the controller). This view uses variables injected by
@@ -15,8 +15,8 @@
  *   $detectedUrl      - Auto-detected base URL
  *   $detectedPath     - Auto-detected base path
  *
- * @package    Countr
- * @copyright  2026 Countr Analytics
+ * @package    Counto
+ * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
  * @version 1.0.0
  */
@@ -28,7 +28,7 @@ declare(strict_types=1);
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countr Analytics - Installation</title>
+    <title>Counto Analytics - Installation</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -246,7 +246,7 @@ declare(strict_types=1);
 <body>
 <div class="container">
     <div class="card">
-        <h1>🚀 Countr Analytics Installation</h1>
+        <h1>🚀 Counto Analytics Installation</h1>
 
         <!-- Progress bar -->
         <div class="progress">
@@ -268,7 +268,7 @@ declare(strict_types=1);
             <div class="step-section">
                 <h2>📋 System-Prüfung</h2>
                 <p style="color:#888;font-size:13px;margin-bottom:1.2rem;">
-                    Ihr Server wird auf Kompatibilität mit Countr Analytics geprüft.
+                    Ihr Server wird auf Kompatibilität mit Counto Analytics geprüft.
                     Kritische Probleme (<span style="color:#dc3545;">❌</span>) müssen behoben werden,
                     Warnungen (<span style="color:#e6a817;">⚠️</span>) sind optional.
                 </p>
@@ -321,7 +321,7 @@ declare(strict_types=1);
 
                 <?php if ($allPassed): ?>
                     <div class="alert alert-success" style="padding:1rem;font-size:14px;">
-                        ✅ Alle System-Prüfungen bestanden! Ihr Server ist bereit für Countr Analytics.
+                        ✅ Alle System-Prüfungen bestanden! Ihr Server ist bereit für Counto Analytics.
                     </div>
                     <form method="post">
                         <input type="hidden" name="step" value="1">
@@ -440,7 +440,7 @@ declare(strict_types=1);
             <div class="step-section">
                 <div class="alert alert-success">
                     <h2>✅ Installation erfolgreich!</h2>
-                    <p>Countr Analytics wurde erfolgreich eingerichtet und ist jetzt einsatzbereit.</p>
+                    <p>Counto Analytics wurde erfolgreich eingerichtet und ist jetzt einsatzbereit.</p>
                 </div>
 
                 <?php if (!empty($setupDetails['api_key'])): ?>
@@ -466,7 +466,7 @@ declare(strict_types=1);
                 <p style="text-align:center;margin-top:1.5rem;color:#888;font-size:13px;">
                     📝 Tracking-Code in Ihre Webseite einbauen:
                 </p>
-                <pre><code><!-- Countr Analytics Tracking (empfohlen) -->
+                <pre><code><!-- Counto Analytics Tracking (empfohlen) -->
                 <!-- Erfasst automatisch die aktuelle Seite inkl. Unterseiten -->
                 <script>
                 (function(e,n){e.src=n+"/track.php?js=1&page="+encodeURIComponent(location.pathname+location.search),e.async=!0,document.head.appendChild(e)})
@@ -482,9 +482,9 @@ declare(strict_types=1);
                 </div>
 
                 <div class="alert alert-info" style="margin-top:0.5rem;">
-                    <strong>📄 Lizenz:</strong> Countr Analytics is licensed under GNU General Public License v3.0.
+                    <strong>📄 Lizenz:</strong> Counto Analytics is licensed under GNU General Public License v3.0.
                     <a href="LICENSE" target="_blank">View License</a> &middot;
-                    <small>Copyright (C) 2026 Countr Analytics</small>
+                    <small>Copyright (C) 2026 Counto Analytics</small>
                 </div>
 
                 <div class="alert alert-info" style="margin-top:0.5rem;">

@@ -1,16 +1,16 @@
 <?php
 /**
- * Security - Security helpers for Countr Analytics.
+ * Security - Security helpers for Counto Analytics.
  *
- * @package Countr\Utils
- * @copyright  2026 Countr Analytics
+ * @package Counto\Utils
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
 
 declare(strict_types=1);
 
-namespace Countr\Utils;
+namespace Counto\Utils;
 
 class Security
 {

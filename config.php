@@ -1,6 +1,6 @@
 <?php
 /**
- * Countr Analytics - Configuration Backward-Compatibility Shim
+ * Counto Analytics - Configuration Backward-Compatibility Shim
  *
  * This file exists for backward compatibility. Since v1.4.0, the
  * configuration management has been split into two specialized classes:
@@ -10,8 +10,8 @@
  * This file requires the new classes and creates a class_alias so that
  * existing code referencing `Config` continues to work unchanged.
  *
- * @package    Countr
- * @copyright  2026 Countr Analytics
+ * @package    Counto
+ * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
  * @version 1.0.0
  */

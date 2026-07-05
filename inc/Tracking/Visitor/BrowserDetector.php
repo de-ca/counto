@@ -5,15 +5,15 @@
  * Extracted from the monolithic Visitor class. Parses User-Agent strings
  * to identify browsers, operating systems, device types, and versions.
  *
- * @package Countr\Tracking
- * @copyright  2026 Countr Analytics
+ * @package Counto\Tracking
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
 
 declare(strict_types=1);
 
-namespace Countr\Tracking;
+namespace Counto\Tracking;
 
 class BrowserDetector
 {

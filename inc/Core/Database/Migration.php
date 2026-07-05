@@ -4,15 +4,15 @@
  *
  * Depends on a QueryBuilder instance (injected) for database operations.
  *
- * @package Countr\Core\Database
- * @copyright  2026 Countr Analytics
+ * @package Counto\Core\Database
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
 
 declare(strict_types=1);
 
-namespace Countr\Core\Database;
+namespace Counto\Core\Database;
 
 use Throwable;
 
@@ -79,7 +79,7 @@ class Migration
                 // Mark initial schema as applied
                 $this->qb->execute(
                     "INSERT OR IGNORE INTO migrations (version, description) VALUES (:v, :d)",
-                    [':v' => '1.0.0', ':d' => 'Initial Countr schema']
+                    [':v' => '1.0.0', ':d' => 'Initial Counto schema']
                 );
             }
 
@@ -144,6 +144,6 @@ class Migration
      */
     private function log(string $message): void
     {
-        error_log('[Countr Migration] ' . date('Y-m-d H:i:s') . ' ' . $message);
+        error_log('[Counto Migration] ' . date('Y-m-d H:i:s') . ' ' . $message);
     }
 }

@@ -1,4 +1,4 @@
-# Änderungsprotokoll – Countr Analytics
+# Änderungsprotokoll – Counto Analytics
 
 Alle wesentlichen Änderungen dieses Projekts werden in dieser Datei dokumentiert.
 
@@ -76,4 +76,4 @@ und dieses Projekt hält sich an [Semantic Versioning](https://semver.org/lang/d
 
 ---
 
-*Countr Analytics ist ein Produkt mit ❤️ entwickelt für die Open-Source-Community.*
+*Counto Analytics ist ein Produkt mit ❤️ entwickelt für die Open-Source-Community.*

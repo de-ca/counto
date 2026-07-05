@@ -6,8 +6,8 @@
  * with compression, database optimization/vacuum, data cleanup with
  * retention policies, database size reporting, and settings get/set.
  *
- * @package Countr
- * @copyright  2026 Countr Analytics
+ * @package Counto
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */

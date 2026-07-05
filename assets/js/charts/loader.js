@@ -1,10 +1,10 @@
 /**
  * charts/loader.js - Chart Data Loader & Orchestrator
  *
- * Handles initial data loading from CountrData (PHP render),
+ * Handles initial data loading from CountoData (PHP render),
  * API polling, auto-init on DOM ready, and theme change listening.
  *
- * @package Countr
+ * @package Counto
  * @version 1.0.0
  */
 
@@ -16,11 +16,11 @@ import { createPagesChart } from './pages.js';
 
 /**
  * Load all charts from the server API.
- * Uses the window.CountrData first (initial PHP render), then polls API.
+ * Uses the window.CountoData first (initial PHP render), then polls API.
  */
 function loadAllCharts() {
     // Try initial data from PHP render first
-    const initialData = window.CountrData;
+    const initialData = window.CountoData;
     if (initialData) {
         try {
             const s7 = safeChartData(initialData.last7Days);
@@ -33,7 +33,7 @@ function loadAllCharts() {
             if (sh.labels.length > 0) createHourlyChart(sh);
             if (sb.labels.length > 0) createBrowserChart(sb);
         } catch (e) {
-            console.warn('[Countr Charts] initial render failed:', e.message);
+            console.warn('[Counto Charts] initial render failed:', e.message);
         }
     }
 
@@ -76,11 +76,11 @@ function fetchChartData() {
                 const sp = safeChartData(d.top_pages_chart || d.top_pages, 'page_url', 'total_views');
                 if (sp.labels.length > 0) createPagesChart(sp);
             } catch (e) {
-                console.warn('[Countr Charts] chart creation failed:', e.message);
+                console.warn('[Counto Charts] chart creation failed:', e.message);
             }
         })
         .catch(function (err) {
-            console.warn('[Countr Charts] Could not fetch chart data:', err.message);
+            console.warn('[Counto Charts] Could not fetch chart data:', err.message);
         });
 }
 

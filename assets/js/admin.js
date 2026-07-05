@@ -1,11 +1,11 @@
 /**
- * admin.js - Countr Admin Entry Point (ES6 Module)
+ * admin.js - Counto Admin Entry Point (ES6 Module)
  *
  * Orchestrates all admin submodules: UI, settings, charts.
  * Binds the public API to window.WBAdmin for backward compatibility
  * with existing inline scripts.
  *
- * @package Countr
+ * @package Counto
  * @version 1.0.0
  */
 
@@ -25,7 +25,7 @@ function safeInit(name, fn) {
     try {
         fn();
     } catch (e) {
-        console.error('[Countr Admin] Init failed for ' + name + ':', e);
+        console.error('[Counto Admin] Init failed for ' + name + ':', e);
     }
 }
 

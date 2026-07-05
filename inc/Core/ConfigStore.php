@@ -1,12 +1,12 @@
 <?php
 /**
- * Countr Analytics - Configuration Store
+ * Counto Analytics - Configuration Store
  *
  * Handles loading, saving, and backup of the JSON configuration.
  * Singleton-based storage with dot-notation access.
  *
- * @package    Countr
- * @copyright  2026 Countr Analytics
+ * @package    Counto
+ * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
  * @version 1.0.0
  */
@@ -71,7 +71,7 @@ class ConfigStore
             'setup_completed'  => false,
             'health_checks'    => true,
             'email_from'       => 'noreply@localhost',
-            'email_from_name'  => 'Countr Analytics',
+            'email_from_name'  => 'Counto Analytics',
             'usage_tracking'   => true,
         ],
     ];

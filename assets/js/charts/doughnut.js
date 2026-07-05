@@ -3,7 +3,7 @@
  *
  * Creates the browser distribution doughnut chart.
  *
- * @package Countr
+ * @package Counto
  * @version 1.0.0
  */
 

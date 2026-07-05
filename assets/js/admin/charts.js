@@ -4,7 +4,7 @@
  * Doughnut charts (browsers, OS, devices) and horizontal bar
  * charts (pages, referrers) for the admin panel tabs.
  *
- * @package Countr
+ * @package Counto
  * @version 1.0.0
  */
 

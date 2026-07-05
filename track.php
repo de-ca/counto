@@ -1,7 +1,7 @@
 <?php
 if (function_exists('opcache_invalidate')) { @opcache_invalidate(__FILE__, true); }
 /**
- * Countr Analytics - Tracking Endpoint
+ * Counto Analytics - Tracking Endpoint
  * 
  * Ultra-fast tracking endpoint that can serve as:
  * 1. 1x1 Transparent GIF (pixel tracking)
@@ -12,8 +12,8 @@ if (function_exists('opcache_invalidate')) { @opcache_invalidate(__FILE__, true)
  * 
  * Backend: SQLite via DatabaseFacade (v1.3.0)
  * 
- * @package    Countr
- * @copyright  2026 Countr Analytics
+ * @package    Counto
+ * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
  * @version 1.0.0
  */
@@ -26,7 +26,7 @@ define('COUNTR_DIR', __DIR__);
 require_once __DIR__ . '/inc/autoload.php';
 require_once __DIR__ . '/inc/Visitor.php';
 
-use Countr\Core\Database\DatabaseFacade;
+use Counto\Core\Database\DatabaseFacade;
 
 // ========== RATE LIMITING ==========
 /**
@@ -173,7 +173,7 @@ if (!$visitor->isBot() || !$ignoreBots) {
         $deviceType    = $visitor->getDeviceType();
         $screenSize    = $visitor->getScreenSize();
         $language      = $visitor->getLanguage();
-        $countryCode   = $visitor->getCountryCode();
+        $countryCode   = $visitor->getCountoyCode();
         $isBot         = $visitor->isBot() ? 1 : 0;
 
         $referrerDomain = '';
@@ -288,7 +288,7 @@ if (!$visitor->isBot() || !$ignoreBots) {
         } catch (\Throwable $rollbackError) {
             // Silently ignore rollback failures
         }
-        error_log('[Countr track.php] Tracking error: ' . $e->getMessage());
+        error_log('[Counto track.php] Tracking error: ' . $e->getMessage());
         // Continue to send response – never leak errors to the browser
     }
 }
@@ -352,7 +352,7 @@ function sendResponse(string $type, ?array $data = null): void
             $response = $data ?? ['tracked' => false];
             $response['_meta'] = [
                 'response_time_ms' => $elapsed,
-                'service'          => 'Countr Analytics',
+                'service'          => 'Counto Analytics',
             ];
 
             echo json_encode($response, JSON_PRETTY_PRINT);
@@ -373,9 +373,9 @@ function sendResponse(string $type, ?array $data = null): void
                 echo "{$callback}({$jsonData});";
             } else {
                 // Set a global variable
-                echo "window.Countr = {$jsonData};";
-                echo "\nwindow.CountrLoaded = true;";
-                echo "\nif (typeof window.CountrReady === 'function') { window.CountrReady(window.Countr); }";
+                echo "window.Counto = {$jsonData};";
+                echo "\nwindow.CountoLoaded = true;";
+                echo "\nif (typeof window.CountoReady === 'function') { window.CountoReady(window.Counto); }";
             }
             break;
 
@@ -395,7 +395,7 @@ function sendResponse(string $type, ?array $data = null): void
 
     // Log response time if slow
     if ($elapsed > 100) {
-        error_log("[Countr Analytics] Slow response: {$elapsed}ms for {$_SERVER['REMOTE_ADDR']}");
+        error_log("[Counto Analytics] Slow response: {$elapsed}ms for {$_SERVER['REMOTE_ADDR']}");
     }
 
     exit;

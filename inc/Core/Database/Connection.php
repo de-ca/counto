@@ -9,18 +9,18 @@
  * v1.6.0: Further modularized — schema initialization and settings management
  * extracted into SchemaInitializerTrait and SettingsManagerTrait.
  *
- * @package Countr\Core\Database
- * @copyright  2026 Countr Analytics
+ * @package Counto\Core\Database
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
 
 declare(strict_types=1);
 
-namespace Countr\Core\Database;
+namespace Counto\Core\Database;
 
 if (version_compare(PHP_VERSION, '8.1.0', '<')) {
-    throw new \Exception('Fehler: Countr Analytics benötigt mindestens PHP 8.1. Deine Version: ' . PHP_VERSION);
+    throw new \Exception('Fehler: Counto Analytics benötigt mindestens PHP 8.1. Deine Version: ' . PHP_VERSION);
 }
 
 
@@ -179,7 +179,7 @@ class Connection
             $this->loadSettings();
 
             // Ensure country_code column exists (migration for v1.7.0)
-            $this->ensureCountryCodeColumn();
+            $this->ensureCountoyCodeColumn();
 
             return true;
 
@@ -557,7 +557,7 @@ class Connection
      * before the country_code field was introduced. Uses ALTER TABLE ADD COLUMN
      * which is safe for SQLite — it won't affect existing data.
      */
-    private function ensureCountryCodeColumn(): void
+    private function ensureCountoyCodeColumn(): void
     {
         if ($this->pdo === null) {
             return;
@@ -589,6 +589,6 @@ class Connection
      */
     private function log(string $message): void
     {
-        error_log('[Countr Connection] ' . date('Y-m-d H:i:s') . ' ' . $message);
+        error_log('[Counto Connection] ' . date('Y-m-d H:i:s') . ' ' . $message);
     }
 }

@@ -1,4 +1,4 @@
-# Changelog – Countr Analytics
+# Changelog – Counto Analytics
 
 All notable changes to this project will be documented in this file.
 
@@ -76,4 +76,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-*Countr Analytics is a product developed with ❤️ for the open-source community.*
+*Counto Analytics is a product developed with ❤️ for the open-source community.*

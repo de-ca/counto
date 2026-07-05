@@ -8,8 +8,8 @@
  *  3. Cloudflare HTTP_CF_IPCOUNTRY header (Geo-IP fallback)
  *  4. Default: en (English)
  *
- * @package    Countr
- * @copyright  2026 Countr Analytics
+ * @package    Counto
+ * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
  * @version 1.0.0
  */

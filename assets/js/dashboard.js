@@ -1,10 +1,10 @@
 /**
- * dashboard.js - Countr Dashboard Logic
+ * dashboard.js - Counto Dashboard Logic
  *
  * Handles live stats updates, auto-refresh, theme toggling,
  * and real-time counter animations.
  *
- * @package Countr
+ * @package Counto
  * @version 1.0.0
  */
 
@@ -16,14 +16,14 @@
     var API_ENDPOINT = 'api.php?action=snapshot';
 
     /**
-     * Get translated string from window.CountrI18n or fallback.
+     * Get translated string from window.CountoI18n or fallback.
      * @param {string} key
      * @param {string} [fallback]
      * @returns {string}
      */
     function t(key, fallback) {
-        if (window.CountrI18n && window.CountrI18n[key]) {
-            return window.CountrI18n[key];
+        if (window.CountoI18n && window.CountoI18n[key]) {
+            return window.CountoI18n[key];
         }
         return fallback || key;
     }
@@ -264,7 +264,7 @@
             }
 
         } catch (err) {
-            console.warn('[Countr] Live update failed:', err.message);
+            console.warn('[Counto] Live update failed:', err.message);
             showError(t('error_fetch', 'Live-Update fehlgeschlagen. Verbindung zum Server unterbrochen.'));
         } finally {
             isUpdating = false;

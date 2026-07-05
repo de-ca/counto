@@ -1,12 +1,12 @@
 <?php
 /**
- * Countr Analytics - Data Export
+ * Counto Analytics - Data Export
  * 
  * Exports statistics as CSV, JSON, or Excel-compatible formats.
  * Supports date range filtering and data anonymization.
  * 
- * @package    Countr
- * @copyright  2026 Countr Analytics
+ * @package    Counto
+ * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
  * @version 1.0.0
  */
@@ -20,7 +20,7 @@ require_once __DIR__ . '/inc/Visitor.php';
 require_once __DIR__ . '/inc/Tracker.php';
 require_once __DIR__ . '/inc/Stats.php';
 
-use Countr\Core\Database\DatabaseFacade;
+use Counto\Core\Database\DatabaseFacade;
 
 // ========== SESSION START ==========
 if (session_status() === PHP_SESSION_NONE) {
@@ -72,7 +72,7 @@ if (!checkAuth() && $_SERVER['REQUEST_METHOD'] !== 'POST') {
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Countr Analytics - Datenexport</title>
+        <title>Counto Analytics - Datenexport</title>
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body {
@@ -195,7 +195,7 @@ function exportJSON(array $rangeData, array $summaryData, string $from, string $
         'export_info' => [
             'generated' => date('Y-m-d H:i:s'),
             'date_range' => ['from' => $from, 'to' => $to],
-            'generator' => 'Countr Analytics',
+            'generator' => 'Counto Analytics',
         ],
         'summary' => $summaryData,
         'daily_data' => $rangeData,

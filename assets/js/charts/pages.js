@@ -3,7 +3,7 @@
  *
  * Creates the top pages horizontal bar chart.
  *
- * @package Countr
+ * @package Counto
  * @version 1.0.0
  */
 

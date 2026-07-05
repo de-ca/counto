@@ -17,8 +17,8 @@
  *   - AnalyticsQueriesTrait (analytics-specific statistical queries)
  *   - MaintenanceTrait      (backup, restore, optimization, settings, cleanup)
  * 
- * @package Countr
- * @copyright  2026 Countr Analytics
+ * @package Counto
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
@@ -394,7 +394,7 @@ class Database
      */
     protected function log(string $message): void
     {
-        error_log('[Countr Database] ' . date('Y-m-d H:i:s') . ' ' . $message);
+        error_log('[Counto Database] ' . date('Y-m-d H:i:s') . ' ' . $message);
     }
 
     /**

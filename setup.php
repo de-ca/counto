@@ -1,14 +1,14 @@
 <?php
 /**
- * Countr Analytics - Setup Wizard Controller
+ * Counto Analytics - Setup Wizard Controller
  *
  * Processes POST requests, performs AJAX actions, handles system checks,
  * database initialization, and delegates rendering to the view.
  *
  * Automatically deactivates itself after successful setup for security.
  *
- * @package    Countr
- * @copyright  2026 Countr Analytics
+ * @package    Counto
+ * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
  * @version 1.0.0
  */
@@ -40,7 +40,7 @@ if (file_exists($databaseFile) || file_exists($setupLockFile) || file_exists($co
     echo 'strong{color:#e94560}</style>';
     echo '</head><body><div class="box">';
     echo '<h1>⛔ Setup bereits abgeschlossen</h1>';
-    echo '<p>Countr Analytics wurde bereits eingerichtet. Der Setup-Assistent ist gesperrt, um die Sicherheit Ihrer Installation zu schützen.</p>';
+    echo '<p>Counto Analytics wurde bereits eingerichtet. Der Setup-Assistent ist gesperrt, um die Sicherheit Ihrer Installation zu schützen.</p>';
     echo '<div class="warning"><strong>⚠️ Sicherheitswarnung:</strong><br><br>';
     echo 'Die Datei <code>setup.php</code> ist noch auf Ihrem Server vorhanden und über den Browser erreichbar. ';
     echo 'Solange diese Datei existiert, kann ein Angreifer potenziell die Konfiguration überschreiben oder das Admin-Passwort zurücksetzen.<br><br>';
@@ -109,7 +109,7 @@ function autoFixOnFirstLoad(): void
     }
 
     // --- STEP 3: Ensure .htaccess files exist with "Deny from all" ---
-    $htaccessContent = "# Zero-Config Auto-Protection – Countr Analytics\n"
+    $htaccessContent = "# Zero-Config Auto-Protection – Counto Analytics\n"
         . "# Deny direct access to all files in this directory\n"
         . "Deny from all\n"
         . "# Apache 2.4+\n"
@@ -153,7 +153,7 @@ function renderAutoFixError(array $errors): void
     http_response_code(500);
     header('Content-Type: text/html; charset=utf-8');
     echo '<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow">';
-    echo '<title>Berechtigungsproblem – Countr Setup</title>';
+    echo '<title>Berechtigungsproblem – Counto Setup</title>';
     echo '<style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:#1a1a2e;color:#eee}';
     echo '.box{background:#16213e;padding:3rem;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.4);max-width:650px;text-align:center;border:2px solid #e94560}';
     echo 'h1{color:#e94560;font-size:1.6rem;margin-bottom:1rem}';
@@ -163,7 +163,7 @@ function renderAutoFixError(array $errors): void
     echo 'strong{color:#e94560}</style>';
     echo '</head><body><div class="box">';
     echo '<h1>🔒 Berechtigungsproblem</h1>';
-    echo '<p>Countr konnte die benötigten Schreibrechte nicht automatisch einrichten.</p>';
+    echo '<p>Counto konnte die benötigten Schreibrechte nicht automatisch einrichten.</p>';
 
     foreach ($errors as $error) {
         echo '<div class="cmd">' . htmlspecialchars($error, ENT_QUOTES, 'UTF-8') . '</div>';

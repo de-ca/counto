@@ -4,15 +4,15 @@
  *
  * Defines the public API that any database implementation must provide.
  *
- * @package Countr\Interfaces
- * @copyright  2026 Countr Analytics
+ * @package Counto\Interfaces
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
 
 declare(strict_types=1);
 
-namespace Countr\Interfaces;
+namespace Counto\Interfaces;
 
 interface DatabaseInterface
 {

@@ -1,5 +1,5 @@
 /**
- * Countr - Chart Initialization v1.5.0
+ * Counto - Chart Initialization v1.5.0
  * Creates and renders all charts on the dashboard using Chart.js 4.x
  * Hardened: accepts multiple data shapes without crashing.
  */
@@ -7,19 +7,19 @@
     'use strict';
 
     /**
-     * Safely extract labels/values from CountrData for a given key.
+     * Safely extract labels/values from CountoData for a given key.
      * Handles old array format [{date, visitors, pageviews}],
      * new {labels, visitors, pageviews} format, and missing data.
      *
-     * @param {string} key  – key in window.CountrData (e.g. 'last7Days', 'browsers')
+     * @param {string} key  – key in window.CountoData (e.g. 'last7Days', 'browsers')
      * @param {string} mode – 'timeseries' or 'distribution'
      * @returns {{ labels: string[], datasets: object[] }}
      */
     function safeExtract(key, mode) {
         var empty = { labels: [], datasets: [] };
-        if (!window.CountrData) return empty;
+        if (!window.CountoData) return empty;
 
-        var raw = window.CountrData[key];
+        var raw = window.CountoData[key];
         if (!raw) return empty;
 
         try {
@@ -77,7 +77,7 @@
 
             return empty;
         } catch (e) {
-            console.warn('[Countr] chart.js error extracting "' + key + '":', e.message);
+            console.warn('[Counto] chart.js error extracting "' + key + '":', e.message);
             return empty;
         }
     }
@@ -280,7 +280,7 @@
                 });
             }
         } catch (e) {
-            console.warn('[Countr] chart.js render failed:', e.message);
+            console.warn('[Counto] chart.js render failed:', e.message);
         }
     }
 

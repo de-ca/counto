@@ -1,12 +1,12 @@
 Lesen Sie dies auf Englisch: [Read this in English](README.md)
 
 <div align="center">
-  <img src="assets/github-banner-de.svg" alt="Countr Banner">
+  <img src="assets/counto-banner-de.svg" alt="Counto Banner">
 </div>
 
 ---
 
-# Countr Analytics – Moderne SQLite Web-Analytics
+# Counto Analytics – Moderne SQLite Web-Analytics
 
 <div align="center">
 
@@ -22,9 +22,9 @@ Lesen Sie dies auf Englisch: [Read this in English](README.md)
 
 ## 📊 Überblick
 
-**Countr Analytics** ist ein modernes, SQLite-basiertes Web-Analytics-System, das **kein MySQL** benötigt. Perfekt für Shared Hosting, läuft auf jedem Server mit **PHP 8.1 oder höher**. Einfach hochladen, Setup durchlaufen – fertig.
+**Counto Analytics** ist ein modernes, SQLite-basiertes Web-Analytics-System, das **kein MySQL** benötigt. Perfekt für Shared Hosting, läuft auf jedem Server mit **PHP 8.1 oder höher**. Einfach hochladen, Setup durchlaufen – fertig.
 
-### Warum Countr Analytics?
+### Warum Counto Analytics?
 
 | Problem | Lösung |
 |---------|--------|
@@ -94,13 +94,13 @@ Das Setup erkennt automatisch, dass die Konfiguration fehlt, und leitet Sie zum 
 Nach erfolgreichem Setup deaktiviert sich `setup.php` automatisch und alle Rechte werden rekursiv korrigiert.
 
 ### 4. Einbinden
-Fügen Sie den Tracking-Code in Ihre Webseite ein. Der `track.php`-Endpunkt wird von Ihrer Countr-Installation bereitgestellt.
+Fügen Sie den Tracking-Code in Ihre Webseite ein. Der `track.php`-Endpunkt wird von Ihrer Counto-Installation bereitgestellt.
 
 ```html
 <!-- Einfache Variante (empfohlen) -->
 <script async src="/countr/track.php?js=1"></script>
 
-<!-- Oder mit voller URL, wenn Countr auf einer anderen (Sub-)Domain läuft: -->
+<!-- Oder mit voller URL, wenn Counto auf einer anderen (Sub-)Domain läuft: -->
 <script async src="https://ihre-domain.de/countr/track.php?js=1"></script>
 
 <!-- Alternative: Image Pixel -->
@@ -229,7 +229,7 @@ Antwort (JSON):
 
 <details>
 <summary><strong>Funktioniert das auf Shared Hosting?</strong></summary>
-Ja, Countr Analytics benötigt nur PHP 8.1+ mit SQLite3. Keine MySQL-Datenbank nötig.
+Ja, Counto Analytics benötigt nur PHP 8.1+ mit SQLite3. Keine MySQL-Datenbank nötig.
 </details>
 
 <details>
@@ -248,7 +248,7 @@ Ja. Standardmäßig werden IP-Adressen anonymisiert, es werden keine Cookies ges
 </details>
 
 <details>
-<summary><strong>Ist Countr Analytics werbefrei?</strong></summary>
+<summary><strong>Ist Counto Analytics werbefrei?</strong></summary>
 Ja. 100% werbefrei und Open Source. Keine externen Aufrufe, keine Tracking-Backdoors.
 </details>
 
@@ -267,7 +267,7 @@ Bei Fragen, Problemen oder Feature-Wünschen:
 
 ## 📄 Lizenz
 
-Countr Analytics ist freie Software: Sie können sie unter den Bedingungen
+Counto Analytics ist freie Software: Sie können sie unter den Bedingungen
 der GNU General Public License, wie von der Free Software Foundation
 veröffentlicht, weitergeben und/oder modifizieren, entweder gemäß
 Version 3 der Lizenz oder (nach Ihrer Option) jeder späteren Version.
@@ -275,7 +275,7 @@ Version 3 der Lizenz oder (nach Ihrer Option) jeder späteren Version.
 Der vollständige Lizenztext ist in der Datei [LICENSE](LICENSE) zu finden.
 
 ## Änderungen
-Wenn Sie Countr Analytics modifizieren und weiterverbreiten, müssen Sie:
+Wenn Sie Counto Analytics modifizieren und weiterverbreiten, müssen Sie:
 - Die GPLv3-Lizenz beibehalten
 - Die vorgenommenen Änderungen angeben
 - Den ursprünglichen Urheberrechtsvermerk einschließen

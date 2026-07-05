@@ -3,7 +3,7 @@
  *
  * Creates the 7-day visitor + pageviews bar chart.
  *
- * @package Countr
+ * @package Counto
  * @version 1.0.0
  */
 

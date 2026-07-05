@@ -10,8 +10,8 @@
  * 
  * v1.6.0: Modularized into inc/Stats/ processors; Stats.php is now a facade.
  * 
- * @package Countr
- * @copyright  2026 Countr Analytics
+ * @package Counto
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */

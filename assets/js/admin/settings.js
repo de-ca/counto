@@ -4,7 +4,7 @@
  * Settings form with unsaved-changes warning, export functions,
  * backup management, and tool actions (optimize, anonymize).
  *
- * @package Countr
+ * @package Counto
  * @version 1.0.0
  */
 

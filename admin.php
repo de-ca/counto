@@ -1,6 +1,6 @@
 <?php
 /**
- * Countr Analytics - Admin Control Panel
+ * Counto Analytics - Admin Control Panel
  *
  * Password-protected administration area with 7 tabs:
  *   Overview, Visitors, Pages, Referrers, Settings, Export, Tools
@@ -9,8 +9,8 @@
  *           CSV/JSON/Excel export, settings editor, backup/restore,
  *           data cleanup, IP management, and system info.
  *
- * @package    Countr
- * @copyright  2026 Countr Analytics
+ * @package    Counto
+ * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
  * @version 1.0.0
  */
@@ -53,7 +53,7 @@ require_once __DIR__ . '/inc/Tracker.php';
 require_once __DIR__ . '/inc/Stats.php';
 
 // Initialize SQLite database via DatabaseFacade
-use Countr\Core\Database\DatabaseFacade;
+use Counto\Core\Database\DatabaseFacade;
 $db = DatabaseFacade::getInstance();
 
 /**
@@ -133,7 +133,7 @@ if (!empty($_SESSION[ADMIN_SESSION_KEY]) && !empty($_SESSION[ADMIN_SESSION_TIME]
 $isLoggedIn = !empty($_SESSION[ADMIN_SESSION_KEY]);
 
 // Generate CSRF token for form protection
-$csrfToken = \Countr\Utils\Security::getCsrfToken();
+$csrfToken = \Counto\Utils\Security::getCsrfToken();
 
 // Auto-initialize admin password if missing from SQLite settings table
 if (empty($rawConfig['security']['admin_password'])) {
@@ -146,7 +146,7 @@ if (empty($rawConfig['security']['admin_password'])) {
 $loginError = '';
 if (!$isLoggedIn && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     // Verify CSRF token for login form
-    $loginCsrfValid = \Countr\Utils\Security::verifyCsrf($_POST['_csrf'] ?? '');
+    $loginCsrfValid = \Counto\Utils\Security::verifyCsrf($_POST['_csrf'] ?? '');
     if (!$loginCsrfValid) {
         $loginError = __('admin.csrf_error');
     } else {
@@ -183,7 +183,7 @@ $messageType = 'info';
 
 if ($isLoggedIn && $_SERVER['REQUEST_METHOD'] === 'POST') {
     // --- CSRF Protection for all POST actions ---
-    $csrfValid = \Countr\Utils\Security::verifyCsrf($_POST['_csrf'] ?? '');
+    $csrfValid = \Counto\Utils\Security::verifyCsrf($_POST['_csrf'] ?? '');
     if (!$csrfValid) {
         $message = __('admin.csrf_error');
         $messageType = 'error';
@@ -694,29 +694,29 @@ header('Content-Type: text/html; charset=utf-8');
                     </div>
                 </div>
 
-                <!-- Country Distribution List -->
+                <!-- Countoy Distribution List -->
                 <div class="charts-grid" style="margin-top:var(--spacing-md);">
                     <div class="chart-card chart-card--full">
                         <h3 class="chart-title"><?= __('admin.country_dist') ?></h3>
                         <div class="top-pages-list" id="admin-country-dist">
                             <?php
-                            $adminCountries = $tracker->getCountryDistribution(30);
-                            $adminCountryData = [];
-                            $adminTotalCountries = 0;
-                            foreach ($adminCountries as $row) {
+                            $adminCountoies = $tracker->getCountoyDistribution(30);
+                            $adminCountoyData = [];
+                            $adminTotalCountoies = 0;
+                            foreach ($adminCountoies as $row) {
                                 $code = $row['country_code'] ?? '';
                                 $count = (int)($row['count'] ?? 0);
                                 if ($code !== '' && $count > 0) {
-                                    $adminTotalCountries += $count;
-                                    $adminCountryData[$code] = $count;
+                                    $adminTotalCountoies += $count;
+                                    $adminCountoyData[$code] = $count;
                                 }
                             }
-                            arsort($adminCountryData);
-                            $adminCountryData = array_slice($adminCountryData, 0, 10, true);
-                            if (!empty($adminCountryData)):
+                            arsort($adminCountoyData);
+                            $adminCountoyData = array_slice($adminCountoyData, 0, 10, true);
+                            if (!empty($adminCountoyData)):
                                 $adminRank = 1;
-                                foreach ($adminCountryData as $code => $count):
-                                    $adminPct = $adminTotalCountries > 0 ? round(($count / $adminTotalCountries) * 100, 1) : 0;
+                                foreach ($adminCountoyData as $code => $count):
+                                    $adminPct = $adminTotalCountoies > 0 ? round(($count / $adminTotalCountoies) * 100, 1) : 0;
                             ?>
                                 <div class="top-page-item">
                                     <span class="top-page-rank">#<?= $adminRank++ ?></span>
@@ -1005,7 +1005,7 @@ header('Content-Type: text/html; charset=utf-8');
 
 <!-- i18n bridge for JavaScript (Chart.js labels) -->
 <script>
-window.CountrI18n = <?= json_encode($adminI18n, JSON_UNESCAPED_UNICODE) ?>;
+window.CountoI18n = <?= json_encode($adminI18n, JSON_UNESCAPED_UNICODE) ?>;
 </script>
 
 <!-- Initial Chart Data for Admin (from SQLite via PHP) -->

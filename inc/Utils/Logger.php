@@ -1,16 +1,16 @@
 <?php
 /**
- * Logger - Simple logging system for Countr Analytics.
+ * Logger - Simple logging system for Counto Analytics.
  *
- * @package Countr\Utils
- * @copyright  2026 Countr Analytics
+ * @package Counto\Utils
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
 
 declare(strict_types=1);
 
-namespace Countr\Utils;
+namespace Counto\Utils;
 
 class Logger
 {
@@ -96,7 +96,7 @@ class Logger
 
         // Also write to PHP error_log if enabled
         if ($this->logToPhp && in_array($level, ['WARNING', 'ERROR'], true)) {
-            error_log('[Countr Analytics] ' . $entry);
+            error_log('[Counto Analytics] ' . $entry);
         }
     }
 

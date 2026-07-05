@@ -6,8 +6,8 @@
  * retrieving daily stats, real-time visitors, top pages/referrers,
  * browser/OS/device distributions, hourly data, and overall summaries.
  *
- * @package Countr
- * @copyright  2026 Countr Analytics
+ * @package Counto
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */

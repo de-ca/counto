@@ -7,15 +7,15 @@
  *
  * v1.6.0: Extracted from Connection.php as part of modular refactoring.
  *
- * @package Countr\Core\Database
- * @copyright  2026 Countr Analytics
+ * @package Counto\Core\Database
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
 
 declare(strict_types=1);
 
-namespace Countr\Core\Database;
+namespace Counto\Core\Database;
 
 use PDOException;
 use RuntimeException;

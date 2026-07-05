@@ -4,8 +4,8 @@
  *
  * v1.6.0: Extracted from Stats.php as part of modular refactoring.
  *
- * @package Countr\Stats
- * @copyright  2026 Countr Analytics
+ * @package Counto\Stats
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */

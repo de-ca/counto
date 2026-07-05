@@ -1,12 +1,12 @@
 <?php
 /**
- * Countr Analytics - Directory Permissions Check & Auto-Fix
+ * Counto Analytics - Directory Permissions Check & Auto-Fix
  *
  * Shows current permissions for all required directories and files,
  * identifies problems, and offers one-click auto-fix via setup.php.
  *
- * @package    Countr
- * @copyright  2026 Countr Analytics
+ * @package    Counto
+ * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
  * @version 1.0.0
  */
@@ -149,7 +149,7 @@ $totalBad = count($dataRecursive['bad_dirs']) + count($dataRecursive['bad_files'
 // ========== HTTP OR CLI OUTPUT ==========
 if (php_sapi_name() === 'cli') {
     // CLI output
-    echo "=== Countr Analytics Permissions Check ===\n\n";
+    echo "=== Counto Analytics Permissions Check ===\n\n";
 
     echo str_pad('Directory', 22) . " | Perms  | Writable | Status\n";
     echo str_repeat('-', 70) . "\n";
@@ -196,7 +196,7 @@ header('Content-Type: text/html; charset=utf-8');
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Permissions Check – Countr Analytics</title>
+    <title>Permissions Check – Counto Analytics</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -259,7 +259,7 @@ header('Content-Type: text/html; charset=utf-8');
 </head>
 <body>
 <div class="container">
-    <h1>🔍 Countr Analytics – Permission Check</h1>
+    <h1>🔍 Counto Analytics – Permission Check</h1>
 
     <?php if (!$hasProblems && $totalBad === 0): ?>
         <div class="summary-ok">
@@ -325,7 +325,7 @@ header('Content-Type: text/html; charset=utf-8');
     <div class="card" id="manualFix" style="display:none;">
         <h2>📋 Manuelle Korrektur-Befehle</h2>
         <p style="margin-bottom:8px;">Führen Sie folgende Befehle auf Ihrem Server aus:</p>
-        <pre><code># In das Countr Analytics-Verzeichnis wechseln
+        <pre><code># In das Counto Analytics-Verzeichnis wechseln
 cd <?= htmlspecialchars(COUNTR_DIR) ?>
 
 # Rekursive Rechte setzen:

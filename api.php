@@ -1,6 +1,6 @@
 <?php
 /**
- * Countr Analytics - REST API (SQLite-only backend)
+ * Counto Analytics - REST API (SQLite-only backend)
  * 
  * Provides programmatic access to statistics data directly from SQLite.
  * No JSON file dependencies. No FileDB. No config.json for data.
@@ -18,8 +18,8 @@
  *   GET /api.php?action=devices      - Device type distribution
  *   GET /api.php?action=hourly       - Hourly distribution
  * 
- * @package    Countr
- * @copyright  2026 Countr Analytics
+ * @package    Counto
+ * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
  * @version 1.0.0
  */
@@ -42,7 +42,7 @@ require_once __DIR__ . '/inc/Tracker.php';
 require_once __DIR__ . '/inc/Stats.php';
 
 // ========== CONFIG FROM SQLITE VIA UNIFIED FACADE ==========
-use Countr\Core\Database\DatabaseFacade;
+use Counto\Core\Database\DatabaseFacade;
 
 $db = DatabaseFacade::getInstance($dbPath);
 $db->connect();

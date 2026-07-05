@@ -4,15 +4,15 @@
  *
  * Depends on a QueryBuilder instance (injected).
  *
- * @package Countr\Core\Database
- * @copyright  2026 Countr Analytics
+ * @package Counto\Core\Database
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
 
 declare(strict_types=1);
 
-namespace Countr\Core\Database;
+namespace Counto\Core\Database;
 
 use DateTime;
 
@@ -208,7 +208,7 @@ class AnalyticsQueries
      * @param int $days Lookback period
      * @return array
      */
-    public function getCountryDistribution(int $days = 30): array
+    public function getCountoyDistribution(int $days = 30): array
     {
         if ($days > 0) {
             return $this->qb->query(

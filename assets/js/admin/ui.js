@@ -4,7 +4,7 @@
  * Tab switching, mobile sidebar toggle, date range filters,
  * confirm dialogs, theme management, and admin auto-refresh.
  *
- * @package Countr
+ * @package Counto
  * @version 1.0.0
  */
 

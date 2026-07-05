@@ -1,13 +1,13 @@
 <?php
 /**
- * Countr Analytics - Public Dashboard (SQLite-only)
+ * Counto Analytics - Public Dashboard (SQLite-only)
  *
- * Main entry point for the Countr Analytics application.
+ * Main entry point for the Counto Analytics application.
  * Displays live statistics, charts, and a responsive dashboard.
  * Uses ONLY SQLite database — no JSON file backend.
  *
- * @package    Countr
- * @copyright  2026 Countr Analytics
+ * @package    Counto
+ * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
  * @version 1.0.0
  */
@@ -49,10 +49,10 @@ if (!file_exists($dbPath)) {
     $title = __('dash.install_required');
     $message = file_exists($setupDisabledPath)
         ? 'Die Konfigurationsdatei <code>data/config.json</code> wurde nicht gefunden. Benennen Sie <code>setup.php.disabled</code> zurück zu <code>setup.php</code>.'
-        : 'Countr Analytics wurde noch nicht eingerichtet und die <code>setup.php</code> fehlt. Bitte laden Sie <code>setup.php</code> aus dem Original-Paket hoch.';
+        : 'Counto Analytics wurde noch nicht eingerichtet und die <code>setup.php</code> fehlt. Bitte laden Sie <code>setup.php</code> aus dem Original-Paket hoch.';
     echo '<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>' . $title . '</title>';
     echo '<style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#333}.box{background:#fff;padding:2.5rem;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.15);text-align:center;max-width:500px}h1{color:#d00;margin-bottom:1rem}.btn{display:inline-block;padding:12px 24px;background:#667eea;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;margin-top:1rem}code{background:#f5f5f5;padding:2px 8px;border-radius:4px;font-size:14px}</style>';
-    echo '</head><body><div class="box"><h1>⚠ Countr Analytics nicht installiert</h1><p>' . $message . '</p></div></body></html>';
+    echo '</head><body><div class="box"><h1>⚠ Counto Analytics nicht installiert</h1><p>' . $message . '</p></div></body></html>';
     exit;
 }
 
@@ -65,7 +65,7 @@ require_once __DIR__ . '/inc/Stats.php';
 // =========================================================================
 // INITIALIZE SQLITE DATABASE
 // =========================================================================
-use Countr\Core\Database\DatabaseFacade;
+use Counto\Core\Database\DatabaseFacade;
 
 $db = DatabaseFacade::getInstance($dbPath);
 $db->connect();
@@ -112,7 +112,7 @@ $last7Days = $tracker->getLastNDays(7);
 $last30Days = $tracker->getLastNDays(30);
 $topPages = $tracker->getTopPages(5);
 $browsers = $tracker->getBrowserDistribution();
-$countries = $tracker->getCountryDistribution(30);
+$countries = $tracker->getCountoyDistribution(30);
 $hourlyDist = $tracker->getHourlyDistribution();
 $online = $tracker->getOnlineCount();
 $bounceRate = $stats->estimateBounceRate();
@@ -179,22 +179,22 @@ unset($hRow);
 
 // Prepare country distribution data for top-list (with flag emoji)
 $countryData = [];
-$totalCountries = 0;
+$totalCountoies = 0;
 foreach ($countries as $row) {
     $code = $row['country_code'] ?? '';
     $count = (int)($row['count'] ?? 0);
     if ($code !== '' && $count > 0) {
-        $totalCountries += $count;
+        $totalCountoies += $count;
         $countryData[$code] = $count;
     }
 }
 arsort($countryData);
-if ($totalCountries > 0) {
+if ($totalCountoies > 0) {
     // Keep only top 10
     $countryData = array_slice($countryData, 0, 10, true);
     // Calculate percentages
     foreach ($countryData as $code => $count) {
-        $pct = round(($count / $totalCountries) * 100, 1);
+        $pct = round(($count / $totalCountoies) * 100, 1);
         $countryData[$code] = ['count' => $count, 'pct' => $pct];
     }
 }
@@ -285,13 +285,13 @@ header('Content-Type: text/html; charset=utf-8');
     <meta name="description" content="<?= __('dash.title') . ' ' . __('chart.visitors') . ' - ' . $siteName ?>">
     <meta name="robots" content="noindex, nofollow">
     <!-- Social Media Meta Tags -->
-    <meta property="og:title" content="<?= $siteName ?> – <?= __('dash.title') ?> | Countr Analytics">
-    <meta property="og:description" content="<?= __('dash.title') ?> <?= __('chart.visitors') ?> <?= __('chart.pageviews') ?>. Powered by Countr Analytics.">
+    <meta property="og:title" content="<?= $siteName ?> – <?= __('dash.title') ?> | Counto Analytics">
+    <meta property="og:description" content="<?= __('dash.title') ?> <?= __('chart.visitors') ?> <?= __('chart.pageviews') ?>. Powered by Counto Analytics.">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Countr Analytics">
+    <meta property="og:site_name" content="Counto Analytics">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="<?= $siteName ?> – <?= __('dash.title') ?> | Countr Analytics">
-    <meta name="twitter:description" content="<?= __('dash.title') ?>. Powered by Countr Analytics.">
+    <meta name="twitter:title" content="<?= $siteName ?> – <?= __('dash.title') ?> | Counto Analytics">
+    <meta name="twitter:description" content="<?= __('dash.title') ?>. Powered by Counto Analytics.">
     <link rel="stylesheet" href="assets/css/dashboard.css?v=<?= filemtime(__DIR__ . '/assets/css/dashboard.css') ?>">
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -394,7 +394,7 @@ header('Content-Type: text/html; charset=utf-8');
         </div>
     </section>
 
-    <!-- Country Distribution Row -->
+    <!-- Countoy Distribution Row -->
     <section class="charts-grid">
         <div class="chart-card chart-card--full">
             <h2 class="chart-title"><?= __('dash.country_dist') ?></h2>
@@ -458,12 +458,12 @@ header('Content-Type: text/html; charset=utf-8');
 
 <!-- i18n bridge for JavaScript (Chart.js labels, dashboard messages) -->
 <script>
-window.CountrI18n = <?= json_encode($countrI18n, JSON_UNESCAPED_UNICODE) ?>;
+window.CountoI18n = <?= json_encode($countrI18n, JSON_UNESCAPED_UNICODE) ?>;
 </script>
 
 <!-- Initial Chart Data (from SQLite via PHP) -->
 <script>
-window.CountrData = <?= json_encode($chartData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) ?>;
+window.CountoData = <?= json_encode($chartData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) ?>;
 </script>
 
 <script type="module" src="assets/js/charts.js?v=<?= filemtime(__DIR__ . '/assets/js/charts.js') ?>"></script>

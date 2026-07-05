@@ -19,8 +19,8 @@
  *
  * v1.6.0: Removed FileDB backward-compatibility. SQLite is the sole storage engine.
  *
- * @package Countr
- * @copyright  2026 Countr Analytics
+ * @package Counto
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
@@ -113,7 +113,7 @@ class Tracker
         if ($this->db instanceof Database && !$this->db->isConnected()) {
             $this->db->connect();
         }
-        if ($this->db instanceof \Countr\Core\Database\DatabaseFacade && !$this->db->isConnected()) {
+        if ($this->db instanceof \Counto\Core\Database\DatabaseFacade && !$this->db->isConnected()) {
             $this->db->connect();
         }
         
@@ -372,7 +372,7 @@ class Tracker
      */
     protected function log(string $message): void
     {
-        error_log('[Countr Analytics Tracker] ' . $message);
+        error_log('[Counto Analytics Tracker] ' . $message);
     }
 
     // =========================================================================

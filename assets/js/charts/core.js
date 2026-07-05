@@ -1,10 +1,10 @@
 /**
- * charts/core.js - Countr Chart Core Utilities
+ * charts/core.js - Counto Chart Core Utilities
  *
  * Shared helpers for all chart modules: i18n, theme detection,
  * Chart.js defaults, chart registry, and data normalization.
  *
- * @package Countr
+ * @package Counto
  * @version 1.0.0
  */
 
@@ -12,14 +12,14 @@
 const charts = {};
 
 /**
- * Get translated string from window.CountrI18n or fallback to the key itself.
+ * Get translated string from window.CountoI18n or fallback to the key itself.
  * @param {string} key
  * @param {string} [fallback]
  * @returns {string}
  */
 export function t(key, fallback) {
-    if (window.CountrI18n && window.CountrI18n[key]) {
-        return window.CountrI18n[key];
+    if (window.CountoI18n && window.CountoI18n[key]) {
+        return window.CountoI18n[key];
     }
     return fallback || key;
 }

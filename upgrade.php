@@ -1,12 +1,12 @@
 <?php
 /**
- * Countr Analytics - Upgrade Script
+ * Counto Analytics - Upgrade Script
  * 
  * Automatically migrates data and configuration from older versions.
  * Safe to run multiple times – only applies needed changes.
  * 
- * @package    Countr
- * @copyright  2026 Countr Analytics
+ * @package    Counto
+ * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
  * @version 1.0.0
  */
@@ -23,7 +23,7 @@ header('Content-Type: text/html; charset=utf-8');
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countr Analytics - Upgrade</title>
+    <title>Counto Analytics - Upgrade</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -60,7 +60,7 @@ header('Content-Type: text/html; charset=utf-8');
 </head>
 <body>
 <div class="card">
-    <h1>🔄 Countr Analytics Upgrade</h1>
+    <h1>🔄 Counto Analytics Upgrade</h1>
     <pre class="log"><?php
 
 // ========== RUN UPGRADE STEPS ==========

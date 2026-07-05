@@ -3,7 +3,7 @@
  *
  * Creates hourly distribution and 30-day trend line charts.
  *
- * @package Countr
+ * @package Counto
  * @version 1.0.0
  */
 

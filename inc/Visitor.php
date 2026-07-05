@@ -4,18 +4,18 @@
  *
  * Provides comprehensive visitor identification including:
  * - Unique visitor fingerprinting (IP + User-Agent + Language hashing)
- * - Browser/OS/Device parsing (delegates to Countr\Tracking\BrowserDetector)
- * - Bot detection (100+ patterns including AI/LLM crawlers; delegates to Countr\Tracking\BotDetector)
+ * - Browser/OS/Device parsing (delegates to Counto\Tracking\BrowserDetector)
+ * - Bot detection (100+ patterns including AI/LLM crawlers; delegates to Counto\Tracking\BotDetector)
  * - GDPR-compliant IP anonymization (last octet removal)
- * - Session management with configurable timeout (delegates to Countr\Tracking\Session)
- * - Referrer analysis (organic, social, direct, email, paid classification; delegates to Countr\Tracking\ReferrerAnalyzer)
+ * - Session management with configurable timeout (delegates to Counto\Tracking\Session)
+ * - Referrer analysis (organic, social, direct, email, paid classification; delegates to Counto\Tracking\ReferrerAnalyzer)
  * - Performance caching for repeated calls
  *
  * This class serves as the public-facing API and backward-compatibility layer.
- * Detection logic lives in the modular Countr\Tracking namespace.
+ * Detection logic lives in the modular Counto\Tracking namespace.
  *
- * @package Countr
- * @copyright  2026 Countr Analytics
+ * @package Counto
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */
@@ -81,17 +81,17 @@ class Visitor
     /** @var array|null Server array (injected for testability) */
     private ?array $server;
     
-    /** @var \Countr\Tracking\BotDetector|null Lazy-loaded bot detector */
-    private ?\Countr\Tracking\BotDetector $botDetector = null;
+    /** @var \Counto\Tracking\BotDetector|null Lazy-loaded bot detector */
+    private ?\Counto\Tracking\BotDetector $botDetector = null;
     
-    /** @var \Countr\Tracking\BrowserDetector|null Lazy-loaded browser/OS detector */
-    private ?\Countr\Tracking\BrowserDetector $browserDetector = null;
+    /** @var \Counto\Tracking\BrowserDetector|null Lazy-loaded browser/OS detector */
+    private ?\Counto\Tracking\BrowserDetector $browserDetector = null;
     
-    /** @var \Countr\Tracking\ReferrerAnalyzer|null Lazy-loaded referrer analyzer */
-    private ?\Countr\Tracking\ReferrerAnalyzer $referrerAnalyzer = null;
+    /** @var \Counto\Tracking\ReferrerAnalyzer|null Lazy-loaded referrer analyzer */
+    private ?\Counto\Tracking\ReferrerAnalyzer $referrerAnalyzer = null;
     
-    /** @var \Countr\Tracking\Session|null Lazy-loaded session manager */
-    private ?\Countr\Tracking\Session $sessionManager = null;
+    /** @var \Counto\Tracking\Session|null Lazy-loaded session manager */
+    private ?\Counto\Tracking\Session $sessionManager = null;
 
     // =========================================================================
     // BOT PATTERNS (inline, for backward-compatible detectBot method)
@@ -171,12 +171,12 @@ class Visitor
     /**
      * Get (or create) the BotDetector instance.
      *
-     * @return \Countr\Tracking\BotDetector
+     * @return \Counto\Tracking\BotDetector
      */
-    private function getBotDetector(): \Countr\Tracking\BotDetector
+    private function getBotDetector(): \Counto\Tracking\BotDetector
     {
         if ($this->botDetector === null) {
-            $this->botDetector = new \Countr\Tracking\BotDetector();
+            $this->botDetector = new \Counto\Tracking\BotDetector();
         }
         return $this->botDetector;
     }
@@ -184,12 +184,12 @@ class Visitor
     /**
      * Get (or create) the BrowserDetector instance.
      *
-     * @return \Countr\Tracking\BrowserDetector
+     * @return \Counto\Tracking\BrowserDetector
      */
-    private function getBrowserDetector(): \Countr\Tracking\BrowserDetector
+    private function getBrowserDetector(): \Counto\Tracking\BrowserDetector
     {
         if ($this->browserDetector === null) {
-            $this->browserDetector = new \Countr\Tracking\BrowserDetector();
+            $this->browserDetector = new \Counto\Tracking\BrowserDetector();
         }
         return $this->browserDetector;
     }
@@ -197,12 +197,12 @@ class Visitor
     /**
      * Get (or create) the ReferrerAnalyzer instance.
      *
-     * @return \Countr\Tracking\ReferrerAnalyzer
+     * @return \Counto\Tracking\ReferrerAnalyzer
      */
-    private function getReferrerAnalyzer(): \Countr\Tracking\ReferrerAnalyzer
+    private function getReferrerAnalyzer(): \Counto\Tracking\ReferrerAnalyzer
     {
         if ($this->referrerAnalyzer === null) {
-            $this->referrerAnalyzer = new \Countr\Tracking\ReferrerAnalyzer();
+            $this->referrerAnalyzer = new \Counto\Tracking\ReferrerAnalyzer();
         }
         return $this->referrerAnalyzer;
     }
@@ -210,12 +210,12 @@ class Visitor
     /**
      * Get (or create) the Session manager instance.
      *
-     * @return \Countr\Tracking\Session
+     * @return \Counto\Tracking\Session
      */
-    private function getSessionManager(): \Countr\Tracking\Session
+    private function getSessionManager(): \Counto\Tracking\Session
     {
         if ($this->sessionManager === null) {
-            $this->sessionManager = new \Countr\Tracking\Session($this->sessionTimeout);
+            $this->sessionManager = new \Counto\Tracking\Session($this->sessionTimeout);
         }
         return $this->sessionManager;
     }
@@ -481,7 +481,7 @@ class Visitor
      *
      * @return string 2-letter ISO country code (e.g., 'DE', 'AT', 'US') or empty
      */
-    public function getCountryCode(): string
+    public function getCountoyCode(): string
     {
         if (empty($this->acceptLanguage)) {
             return '';
@@ -502,7 +502,7 @@ class Visitor
         }
 
         // Fallback: map language code to most likely country
-        $langToCountry = [
+        $langToCountoy = [
             'de' => 'DE',
             'fr' => 'FR',
             'it' => 'IT',
@@ -547,7 +547,7 @@ class Visitor
         ];
 
         $language = $this->getLanguage();
-        return $langToCountry[$language] ?? '';
+        return $langToCountoy[$language] ?? '';
     }
 
     /**

@@ -7,8 +7,8 @@
  * (beginTransaction, commit, rollback, transaction), and convenience CRUD methods
  * (insert, update, delete, select, exists, count).
  *
- * @package Countr
- * @copyright  2026 Countr Analytics
+ * @package Counto
+ * @copyright  2026 Counto Analytics
  * @version 1.0.0
  * @license    GPL-3.0-or-later
  */

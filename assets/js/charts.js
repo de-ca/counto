@@ -1,11 +1,11 @@
 /**
- * charts.js - Countr Chart Entry Point (ES6 Module)
+ * charts.js - Counto Chart Entry Point (ES6 Module)
  *
  * Modular chart system. Imports from charts/ submodules and
  * binds the public API to window.WBCharts for backward compatibility
  * with existing inline scripts.
  *
- * @package Countr
+ * @package Counto
  * @version 1.0.0
  */
 

@@ -1,12 +1,12 @@
 <?php
 /**
- * Countr Analytics - Configuration Validator
+ * Counto Analytics - Configuration Validator
  *
  * Validates the configuration data structure, types, constraints,
  * and business rules. Does NOT load/save – that's ConfigStore's job.
  *
- * @package    Countr
- * @copyright  2026 Countr Analytics
+ * @package    Counto
+ * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
  * @version 1.0.0
  */
