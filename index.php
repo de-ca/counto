@@ -33,11 +33,13 @@ if (file_exists($i18nBase)) {
 // Database path — SQLite is the only storage
 $dbPath = __DIR__ . '/data/counto.db';
 
-// Setup detection: redirect to setup if database is missing
-if (!file_exists($dbPath)) {
-    $setupPath = __DIR__ . '/setup.php';
-    $setupDisabledPath = __DIR__ . '/setup.php.disabled';
+// Setup detection: system is installed when data/config.json exists
+$configPath = __DIR__ . '/data/config.json';
+$setupPath = __DIR__ . '/setup.php';
+$setupDisabledPath = __DIR__ . '/setup.php.disabled';
 
+if (!file_exists($configPath)) {
+    // Not installed yet — redirect to setup or show error
     if (file_exists($setupPath)) {
         header('Location: setup.php');
         exit;
@@ -54,6 +56,11 @@ if (!file_exists($dbPath)) {
     echo '<style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#333}.box{background:#fff;padding:2.5rem;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.15);text-align:center;max-width:500px}h1{color:#d00;margin-bottom:1rem}.btn{display:inline-block;padding:12px 24px;background:#667eea;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;margin-top:1rem}code{background:#f5f5f5;padding:2px 8px;border-radius:4px;font-size:14px}</style>';
     echo '</head><body><div class="box"><h1>⚠ Counto Analytics nicht installiert</h1><p>' . $message . '</p></div></body></html>';
     exit;
+}
+
+// Installed: clean up setup.php if it still exists
+if (file_exists($setupPath)) {
+    @unlink($setupPath);
 }
 
 // Load required files (NO FileDB, NO Config class from JSON)
