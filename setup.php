@@ -210,10 +210,20 @@ if ($action !== '') {
     }
 }
 
+// ========== DETECT BASE URL FOR TRACKING CODE ==========
+// Must be defined before POST processing so the tracking code can
+// reference $detectedUrl and $detectedPath during form submission.
+$detectedUrl  = 'http' . (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 's' : '') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+$detectedPath = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? '/'), '/\\');
+
 // ========== PROCESS FORM SUBMISSION ==========
 $step         = isset($_GET['step']) ? (int)$_GET['step'] : 1;
 $error        = '';
 $setupDetails = [];
+// Initialize tracking code variables with safe defaults.
+// These will be overwritten on successful setup (step 2 POST).
+$trackingBaseUrl = $detectedUrl . $detectedPath;
+$trackingCode    = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $step = isset($_POST['step']) ? (int)$_POST['step'] : 1;
@@ -269,7 +279,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     @file_get_contents(COUNTO_DIR . '/data/config.json') ?: '{}',
                     true
                 );
-                $trackingBaseUrl = $configForSnippet['site']['url'] ?? ($detectedUrl . $detectedPath);
+                // Explicitly load tracking code details from the fresh config
+                $siteNameFromConfig = $configForSnippet['site']['name'] ?? $siteName;
+                $siteUrlFromConfig  = $configForSnippet['site']['url'] ?? $siteUrl;
+                $trackingBaseUrl    = !empty($siteUrlFromConfig) ? rtrim($siteUrlFromConfig, '/') : ($detectedUrl . $detectedPath);
+                $trackingCode       = "<!-- Counto Analytics Tracking -->\n"
+                    . '<script>(function(e,n){e.src=n+"/track.php?js=1&page="+encodeURIComponent(location.pathname+location.search),e.async=!0,document.head.appendChild(e)})(document.createElement("script"),"'
+                    . $trackingBaseUrl . "\");</script>\n"
+                    . '<noscript><img src="' . $trackingBaseUrl
+                    . '/track.php" width="1" height="1" style="display:none" alt=""></noscript>';
             } else {
                 $error = $setupResult['error'] ?? 'Fehler bei der Einrichtung. Bitte prüfen Sie die Schreibrechte.';
             }
@@ -331,13 +349,17 @@ function performSetup(array $settings): array
         $apiKey = 'counto_' . bin2hex(random_bytes(24));
     }
 
+    // Hash the admin password using PASSWORD_DEFAULT (bcrypt with cost autodetect)
+    // Force PASSWORD_DEFAULT to ensure compatibility with password_verify() in admin.php
+    $adminPasswordHash = password_hash($settings['password'], PASSWORD_DEFAULT);
+
     $config = [
         'site' => [
             'name' => $settings['site_name'],
             'url'  => $settings['site_url'],
         ],
         'security' => [
-            'admin_password'       => password_hash($settings['password'], PASSWORD_BCRYPT),
+            'admin_password'       => $adminPasswordHash,
             'allowed_ips'          => [],
             'enable_public_stats'  => $settings['enable_public'],
             'api_key'              => $apiKey,
@@ -375,7 +397,7 @@ function performSetup(array $settings): array
         ],
     ];
 
-    $configJson = json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    $configJson = json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     if ($configJson === false) {
         $result['error'] = 'JSON-Kodierung der Konfiguration fehlgeschlagen.';
         return $result;
@@ -389,7 +411,71 @@ function performSetup(array $settings): array
 
     $result['api_key'] = $apiKey;
 
-    // 4b. WRITE inc/config.php FOR THE LANDING PAGE
+    // 4b. INITIALIZE SQLITE DATABASE WITH CONFIG SETTINGS
+    // The admin panel reads all settings from the SQLite database (via
+    // getSettingsAsNestedArray()). We must seed the freshly-built config
+    // values into counto.db so admin.php can verify the password and serve
+    // the configured site name/URL on first access. Without this step
+    // admin.php auto-initializes to password 'admin' (the fallback).
+    try {
+        require_once COUNTO_DIR . '/inc/autoload.php';
+        $db = \Counto\Core\Database\DatabaseFacade::getInstance();
+        $db->connect();
+
+        $toBool = fn($val): string => $val ? '1' : '0';
+
+        $flatSettings = [
+            'site.name'                       => $config['site']['name'],
+            'site.url'                        => $config['site']['url'],
+            'security.admin_password'         => $adminPasswordHash,
+            'security.enable_public_stats'    => $toBool($config['security']['enable_public_stats']),
+            'security.api_key'                => $config['security']['api_key'] ?? '',
+            'security.multi_user'             => $toBool($config['security']['multi_user']),
+            'security.rate_limit'             => $toBool($config['security']['rate_limit']['enabled']),
+            'security.rate_limit_max'         => (string)($config['security']['rate_limit']['max_requests'] ?? 100),
+            'security.rate_limit_window'      => (string)($config['security']['rate_limit']['window_seconds'] ?? 60),
+            'tracking.timezone'               => $config['tracking']['timezone'],
+            'tracking.session_timeout'        => (string)$config['tracking']['session_timeout'],
+            'tracking.ignore_bots'            => $toBool($config['tracking']['ignore_bots']),
+            'tracking.track_referrers'        => $toBool($config['tracking']['track_referrers']),
+            'tracking.track_browsers'         => $toBool($config['tracking']['track_browsers']),
+            'tracking.track_pages'            => $toBool($config['tracking']['track_pages']),
+            'tracking.track_devices'          => $toBool($config['tracking']['track_devices']),
+            'tracking.track_os'               => $toBool($config['tracking']['track_os']),
+            'tracking.store_ip'               => $toBool($config['tracking']['store_ip']),
+            'tracking.batch_size'             => (string)$config['tracking']['batch_size'],
+            'tracking.write_interval'         => (string)$config['tracking']['write_interval'],
+            'privacy.anonymize_ip'            => $toBool($config['privacy']['anonymize_ip']),
+            'privacy.days_to_keep'            => (string)$config['privacy']['days_to_keep'],
+            'privacy.disable_tracking'        => $toBool($config['privacy']['disable_tracking']),
+            'privacy.cookie_free'             => $toBool($config['privacy']['cookie_free']),
+            'system.version'                  => COUNTO_VERSION,
+            'system.installed_at'             => $config['system']['installed_at'],
+            'system.setup_completed'          => $toBool($config['system']['setup_completed']),
+            'system.health_checks'            => $toBool($config['system']['health_checks']),
+            'schema_version'                  => COUNTO_VERSION,
+        ];
+
+        foreach ($flatSettings as $key => $value) {
+            $db->setSetting($key, $value);
+        }
+
+        $db->disconnect();
+    } catch (\Throwable $e) {
+        // If DB initialization fails, config.json is still valid.
+        // admin.php has a fallback that imports from config.json
+        // on first connect when the settings table is empty.
+        $logDir = COUNTO_DIR . '/data/logs';
+        if (is_dir($logDir) && is_writable($logDir)) {
+            @file_put_contents(
+                $logDir . '/setup_db_init.log',
+                date('Y-m-d H:i:s') . ' | DB Init Warning | ' . $e->getMessage() . "\n",
+                FILE_APPEND | LOCK_EX
+            );
+        }
+    }
+
+    // 4c. WRITE inc/config.php FOR THE LANDING PAGE
     $rootConfigFile = COUNTO_DIR . '/inc/config.php';
     $rootConfigContent = "<?php\nreturn [\n    'base_url' => " . var_export($settings['site_url'], true) . ",\n    'api_key'  => " . var_export($apiKey, true) . ",\n];\n";
     @file_put_contents($rootConfigFile, $rootConfigContent, LOCK_EX);
@@ -415,7 +501,7 @@ function performSetup(array $settings): array
         ],
     ];
 
-    @file_put_contents(COUNTO_DIR . '/data/stats.json', json_encode($stats, JSON_PRETTY_PRINT), LOCK_EX);
+    @file_put_contents(COUNTO_DIR . '/data/stats.json', json_encode($stats, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), LOCK_EX);
     @chmod(COUNTO_DIR . '/data/stats.json', 0644);
 
     // 6. CREATE TODAY'S VISITOR FILE
@@ -467,6 +553,8 @@ function performSetup(array $settings): array
     @chmod(COUNTO_DIR . '/data/.setup_done', 0644);
 
     // 11. DEACTIVATE setup.php
+    // Note: setup.php renames itself so it cannot run again. The admin UI
+    // will guide users to delete the .disabled file for security.
     @rename(COUNTO_DIR . '/setup.php', COUNTO_DIR . '/setup.php.disabled');
 
     $result['success'] = true;
@@ -773,8 +861,8 @@ function fixAllPermissions(): array
 }
 
 /**
- * Setzt rekursive Rechte für ein Verzeichnis und alle Unterelemente.
- * Verzeichnisse erhalten 0755, Dateien 0644.
+ * Set recursive permissions for a directory and all sub-elements.
+ * Directories get 0755, files get 0644.
  */
 function setRecursivePermissions(string $dir, int $dirPerm = 0755, int $filePerm = 0644): array
 {
@@ -988,6 +1076,25 @@ function return_bytes(string $val): int
     return $val;
 }
 
+// ========== FALLBACK: LOAD TRACKING CODE FROM CONFIG IF EMPTY ==========
+// If $trackingCode is still empty at this point (e.g., step=3 reached via
+// edge case without POST data), reconstruct it from the saved config file.
+if (empty($trackingCode)) {
+    $configFallback = json_decode(
+        @file_get_contents(COUNTO_DIR . '/data/config.json') ?: '{}',
+        true
+    );
+    $siteUrlFromConfigFallback = $configFallback['site']['url'] ?? '';
+    if (!empty($siteUrlFromConfigFallback)) {
+        $trackingBaseUrl = rtrim($siteUrlFromConfigFallback, '/');
+        $trackingCode    = "<!-- Counto Analytics Tracking -->\n"
+            . '<script>(function(e,n){e.src=n+"/track.php?js=1&page="+encodeURIComponent(location.pathname+location.search),e.async=!0,document.head.appendChild(e)})(document.createElement("script"),"'
+            . $trackingBaseUrl . "\");</script>\n"
+            . '<noscript><img src="' . $trackingBaseUrl
+            . '/track.php" width="1" height="1" style="display:none" alt=""></noscript>';
+    }
+}
+
 // ========== PREPARE DATA FOR VIEW ==========
 $systemChecks     = getSystemStatus();
 $allPassed        = array_reduce($systemChecks, fn($carry, $check) => $carry && $check['status'], true);
@@ -1001,10 +1108,6 @@ foreach ($systemChecks as $key => $check) {
     }
     $checksByCategory[$category][$key] = $check;
 }
-
-// ========== DETECT BASE URL FOR TRACKING CODE ==========
-$detectedUrl  = 'http' . (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 's' : '') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
-$detectedPath = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? '/'), '/\\');
 
 // ========== OUTPUT – DELEGATE TO VIEW ==========
 header('Content-Type: text/html; charset=utf-8');

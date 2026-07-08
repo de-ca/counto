@@ -98,7 +98,7 @@ if ($isLoggedIn && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = __('admin.password_mismatch');
                 $messageType = 'error';
             } else {
-                $hash = password_hash($newPw, PASSWORD_BCRYPT);
+                $hash = password_hash($newPw, PASSWORD_DEFAULT);
                 $rawConfig['security']['admin_password'] = $hash;
                 $db->setSetting('security.admin_password', $hash);
                 $message = __('admin.password_changed');

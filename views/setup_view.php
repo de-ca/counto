@@ -466,6 +466,9 @@ declare(strict_types=1);
                 <p style="text-align:center;margin-top:1.5rem;color:#888;font-size:13px;">
                     📝 Tracking-Code in Ihre Webseite einbauen:
                 </p>
+                <?php if (!empty($trackingCode)): ?>
+                    <pre><code><?= htmlspecialchars($trackingCode) ?></code></pre>
+                <?php else: ?>
                 <pre><code><!-- Counto Analytics Tracking (empfohlen) -->
                 <!-- Erfasst automatisch die aktuelle Seite inkl. Unterseiten -->
                 <script>
@@ -475,6 +478,7 @@ declare(strict_types=1);
 
                 <!-- Fallback: Image-Pixel für No-JS (nur Seiten, auf denen der Tag direkt platziert ist) -->
                 <noscript><img src="<?= htmlspecialchars($trackingBaseUrl ?? $detectedUrl . $detectedPath) ?>/track.php" width="1" height="1" style="display:none" alt=""></noscript></code></pre>
+                <?php endif; ?>
 
                 <div class="alert alert-info" style="margin-top:1rem;">
                     <strong>🔒 Sicherheitshinweis:</strong> Die <code>setup.php</code> wurde automatisch deaktiviert (umbenannt zu <code>setup.php.disabled</code>).

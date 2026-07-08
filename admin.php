@@ -31,20 +31,34 @@ if (file_exists($i18nFile)) {
     function __(string $key): string { return $key; }
 }
 
-// Redirect to setup if not installed (check for SQLite database)
+// Check: Counto database required for admin operation
 if (!file_exists(__DIR__ . '/data/counto.db')) {
     $setupPath = __DIR__ . '/setup.php';
     $setupDisabledPath = __DIR__ . '/setup.php.disabled';
+    $configExists = file_exists(__DIR__ . '/data/config.json');
     if (file_exists($setupPath)) {
         header('Location: setup.php');
         exit;
     }
     header('Content-Type: text/html; charset=utf-8');
     http_response_code(503);
-    $adminMessage = file_exists($setupDisabledPath)
-        ? 'Die Konfigurationsdatei <code>data/config.json</code> wurde nicht gefunden. Benennen Sie <code>setup.php.disabled</code> zurück zu <code>setup.php</code>.'
-        : __('admin.not_installed_desc');
-    echo '<!DOCTYPE html><html lang="' . ($lang ?? 'en') . '"><head><meta charset="utf-8"><title>' . __('admin.not_installed') . '</title></head><body><h1>' . __('admin.not_installed') . '</h1><p>' . $adminMessage . '</p></body></html>';
+    if ($configExists) {
+        // config.json exists but database is missing → setup may have
+        // been performed with an older version that did not seed SQLite.
+        // Guide the user to re-enable setup and re-run to rebuild DB.
+        $adminMessage = 'Die Datenbank-Datei <code>data/counto.db</code> wurde nicht gefunden, '
+            . 'obwohl <code>data/config.json</code> existiert. '
+            . 'Benennen Sie <code>setup.php.disabled</code> zurück zu <code>setup.php</code> '
+            . 'und führen Sie das Setup erneut aus, um die Datenbank zu initialisieren.';
+        $setupHint = 'Oder entfernen Sie <code>data/config.json</code> sowie <code>data/.setup_done</code> '
+            . 'und rufen Sie <code>setup.php</code> auf.';
+    } else {
+        $adminMessage = file_exists($setupDisabledPath)
+            ? 'Die Konfigurationsdatei <code>data/config.json</code> wurde nicht gefunden. Benennen Sie <code>setup.php.disabled</code> zurück zu <code>setup.php</code>.'
+            : __('admin.not_installed_desc');
+        $setupHint = '';
+    }
+    echo '<!DOCTYPE html><html lang="' . ($lang ?? 'en') . '"><head><meta charset="utf-8"><title>' . __('admin.not_installed') . '</title></head><body><h1>' . __('admin.not_installed') . '</h1><p>' . $adminMessage . '</p>' . ($setupHint ? '<p><small>' . $setupHint . '</small></p>' : '') . '</body></html>';
     exit;
 }
 
@@ -139,7 +153,7 @@ $csrfToken = \Counto\Utils\Security::getCsrfToken();
 
 // Auto-initialize admin password if missing from SQLite settings table
 if (empty($rawConfig['security']['admin_password'])) {
-    $defaultHash = password_hash('admin', PASSWORD_BCRYPT);
+    $defaultHash = password_hash('admin', PASSWORD_DEFAULT);
     $rawConfig['security']['admin_password'] = $defaultHash;
     $db->setSetting('security.admin_password', $defaultHash);
 }
