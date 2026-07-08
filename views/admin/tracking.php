@@ -5,7 +5,7 @@
  * @package    Counto
  * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
- * @version 1.4.0
+ * @version 1.4.1
  *
  * @global array  $rawConfig          Counto settings (nested array from SQLite)
  * @global string $tracking_script_tag The pre-built <script> tag for track.js

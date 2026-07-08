@@ -15,5 +15,5 @@
 
 declare(strict_types=1);
 
-define('COUNTO_VERSION', '1.4.0');
+define('COUNTO_VERSION', '1.4.1');
 define('COUNTO_VERSION_DATE', '2026-07-08');

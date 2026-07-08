@@ -15,7 +15,7 @@ if (function_exists('opcache_invalidate')) { @opcache_invalidate(__FILE__, true)
  * @package    Counto
  * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
- * @version 1.4.0
+ * @version 1.4.1
  */
 
 // ========== CONFIGURATION ==========

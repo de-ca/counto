@@ -21,7 +21,7 @@
  * @package    Counto
  * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
- * @version 1.4.0
+ * @version 1.4.1
  */
 
 declare(strict_types=1);
@@ -78,14 +78,6 @@ if ($apiKey && $providedKey !== $apiKey) {
     }
 }
 
-// ========== INITIALIZE WITH DATABASE (SQLite only, NO FileDB) ==========
-$visitor = Visitor::fromCurrentRequest();
-$tracker = new Tracker($db, $visitor, $rawConfig);
-$stats = new Stats($db, $tracker, $rawConfig);
-
-// Flush buffer so we have fresh data
-$tracker->flushBuffer();
-
 // ========== HANDLE ACTIONS ==========
 $action = $_GET['action'] ?? 'snapshot';
 
@@ -99,6 +91,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204);
     exit;
 }
+
+// ========== LIGHTWEIGHT PULSE ENDPOINT ==========
+// Runs BEFORE heavy object initialization — only queries the sessions table.
+if ($action === 'pulse') {
+    try {
+        $online = (int)$db->queryScalar(
+            "SELECT COUNT(*) FROM sessions WHERE last_activity >= datetime('now', '-5 minutes')"
+        );
+        sendJson(['success' => true, 'data' => ['online' => $online]]);
+    } catch (Throwable $e) {
+        sendJson(['success' => false, 'error' => $e->getMessage()], 500);
+    }
+}
+
+// ========== INITIALIZE WITH DATABASE (SQLite only, NO FileDB) ==========
+$visitor = Visitor::fromCurrentRequest();
+$tracker = new Tracker($db, $visitor, $rawConfig);
+$stats = new Stats($db, $tracker, $rawConfig);
+
+// Flush buffer so we have fresh data
+$tracker->flushBuffer();
 
 try {
     switch ($action) {
@@ -199,7 +212,7 @@ try {
         default:
             sendJson(['success' => false, 'error' => 'Unknown action', 'available' => [
                 'snapshot', 'summary', 'overall', 'range', 'top_pages',
-                'browsers', 'os', 'devices', 'hourly', 'online', 'last_days'
+                'browsers', 'os', 'devices', 'hourly', 'online', 'last_days', 'pulse'
             ]], 400);
             break;
     }

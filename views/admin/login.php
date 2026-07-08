@@ -10,7 +10,7 @@
  * @package    Counto
  * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
- * @version 1.4.0
+ * @version 1.4.1
  *
  * @global string $lang           Current language code (en/de)
  * @global string $loginError     Login error message (empty if none)

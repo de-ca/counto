@@ -12,8 +12,10 @@
     'use strict';
 
     // Config
-    var REFRESH_INTERVAL = 30000; // 30 seconds
+    var REFRESH_INTERVAL = 60000; // 60 seconds — full dashboard (snapshot)
+    var PULSE_INTERVAL = 10000;   // 10 seconds — online count only (lightweight)
     var API_ENDPOINT = 'api.php?action=snapshot';
+    var PULSE_ENDPOINT = 'api.php?action=pulse';
 
     /**
      * Get translated string from window.CountoI18n or fallback.
@@ -30,6 +32,7 @@
 
     // State
     let refreshTimer = null;
+    let pulseTimer = null;
     let isUpdating = false;
     let lastOnlineCount = 0;
 
@@ -403,7 +406,42 @@
     // =========================================================================
 
     /**
-     * Start the auto-refresh timer.
+     * Fetch only the online count from the lightweight pulse endpoint.
+     * Updates #online-count and the pulse indicator without touching anything else.
+     */
+    async function fetchPulse() {
+        try {
+            const response = await fetch(PULSE_ENDPOINT);
+            if (!response.ok) return;
+
+            const result = await response.json();
+            if (!result.success || !result.data) return;
+
+            const onlineVal = result.data.online;
+            if (onlineVal !== null && onlineVal !== undefined) {
+                const onlineEl = document.getElementById('online-count');
+                if (onlineEl) {
+                    // Only update if value actually changed to avoid unnecessary repaints
+                    const currentVal = parseInt(onlineEl.textContent.replace(/[^0-9-]/g, ''), 10) || 0;
+                    if (currentVal !== onlineVal) {
+                        onlineEl.textContent = formatNumber(onlineVal);
+                        lastOnlineCount = onlineVal;
+                    }
+                }
+
+                // Pulse indicator
+                const pulseEl = document.querySelector('.stat-card__pulse');
+                if (pulseEl) {
+                    pulseEl.style.display = onlineVal > 0 ? 'block' : 'none';
+                }
+            }
+        } catch (err) {
+            // Silently ignore pulse failures — the full snapshot will recover
+        }
+    }
+
+    /**
+     * Start the auto-refresh timer (full snapshot every 60s).
      */
     function startAutoRefresh() {
         stopAutoRefresh();
@@ -421,15 +459,36 @@
     }
 
     /**
+     * Start the pulse timer (online count every 10s).
+     */
+    function startPulse() {
+        stopPulse();
+        pulseTimer = setInterval(fetchPulse, PULSE_INTERVAL);
+    }
+
+    /**
+     * Stop the pulse timer.
+     */
+    function stopPulse() {
+        if (pulseTimer) {
+            clearInterval(pulseTimer);
+            pulseTimer = null;
+        }
+    }
+
+    /**
      * Handle page visibility changes (pause updates when hidden).
      */
     function handleVisibilityChange() {
         if (document.hidden) {
             stopAutoRefresh();
+            stopPulse();
         } else {
             // Fetch immediately when becoming visible again
             fetchLiveData();
+            fetchPulse();
             startAutoRefresh();
+            startPulse();
         }
     }
 
@@ -446,8 +505,11 @@
         // Initial data fetch
         fetchLiveData();
 
-        // Start auto-refresh
+        // Start auto-refresh (full snapshot every 60s)
         startAutoRefresh();
+
+        // Start pulse (online count every 10s)
+        startPulse();
 
         // Handle visibility changes
         document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -483,8 +545,11 @@
     // =========================================================================
     window.WBDashboard = {
         fetchLiveData,
+        fetchPulse,
         startAutoRefresh,
         stopAutoRefresh,
+        startPulse,
+        stopPulse,
         toggleTheme,
         applyTheme,
         init,

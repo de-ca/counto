@@ -39,6 +39,8 @@ und dieses Projekt hält sich an [Semantic Versioning](https://semver.org/lang/d
 - Verschiedene Berechtigungs-Probleme bei Shared-Hosting-Umgebungen
 - Kleinere Inkonsistenzen in der Konfigurationsverwaltung
 
+## [1.4.1] - 2026-07-08: Hybrid-Polling für Echtzeit-'Jetzt online'-Zahlen, Stabilisierung des Dashboards durch Null-Safe-Updates, finale Code-Modularisierung.
+
 ---
 
 ## [1.0.0] – 2026-01-15
