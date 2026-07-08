@@ -91,8 +91,13 @@ class Database
      */
     private function __construct(?string $dbPath = null, ?string $backupDir = null)
     {
-        $this->dbPath = $dbPath ?? '/var/www/html/counto/data/counto.db';
-        $this->backupDir = $backupDir ?? '/var/www/html/counto/data/backups';
+        // Determine the project root directory.
+        // Prefer the COUNTO_DIR constant (set by admin.php, index.php, etc.),
+        // otherwise fall back to walking up from this file's location
+        // (inc/Database.php → 2 levels up = project root).
+        $rootDir = defined('COUNTO_DIR') ? COUNTO_DIR : dirname(__DIR__);
+        $this->dbPath = $dbPath ?? $rootDir . '/data/counto.db';
+        $this->backupDir = $backupDir ?? $rootDir . '/data/backups';
     }
 
     /**

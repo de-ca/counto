@@ -60,13 +60,19 @@ class Connection
     // =========================================================================
 
     /**
-     * @param string|null $dbPath    Path to SQLite database (defaults to /var/www/html/counto/data/counto.db)
-     * @param string|null $backupDir Path to backup directory (defaults to /var/www/html/counto/data/backups)
+     * @param string|null $dbPath    Path to SQLite database (defaults to <project-root>/data/counto.db)
+     * @param string|null $backupDir Path to backup directory (defaults to <project-root>/data/backups)
      */
     public function __construct(?string $dbPath = null, ?string $backupDir = null)
     {
-        $this->dbPath = $dbPath ?? '/var/www/html/counto/data/counto.db';
-        $this->backupDir = $backupDir ?? '/var/www/html/counto/data/backups';
+        // Determine the project root directory.
+        // Prefer the COUNTO_DIR constant (set by admin.php, index.php, etc.),
+        // otherwise fall back to walking up from this file's location
+        // (inc/Core/Database/Connection.php → 4 levels up = project root).
+        $rootDir = defined('COUNTO_DIR') ? COUNTO_DIR : dirname(__DIR__, 4);
+
+        $this->dbPath = $dbPath ?? $rootDir . '/data/counto.db';
+        $this->backupDir = $backupDir ?? $rootDir . '/data/backups';
     }
 
     // =========================================================================
