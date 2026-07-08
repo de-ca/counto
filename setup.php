@@ -261,6 +261,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($setupResult['success']) {
                 $step         = 3;
                 $setupDetails = $setupResult;
+                // Read site.url from fresh config for the tracking snippet
+                $configForSnippet = json_decode(
+                    @file_get_contents(COUNTO_DIR . '/data/config.json') ?: '{}',
+                    true
+                );
+                $trackingBaseUrl = $configForSnippet['site']['url'] ?? ($detectedUrl . $detectedPath);
             } else {
                 $error = $setupResult['error'] ?? 'Fehler bei der Einrichtung. Bitte prüfen Sie die Schreibrechte.';
             }

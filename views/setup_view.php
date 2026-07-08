@@ -470,11 +470,11 @@ declare(strict_types=1);
                 <!-- Erfasst automatisch die aktuelle Seite inkl. Unterseiten -->
                 <script>
                 (function(e,n){e.src=n+"/track.php?js=1&page="+encodeURIComponent(location.pathname+location.search),e.async=!0,document.head.appendChild(e)})
-                (document.createElement("script"),"<?= htmlspecialchars($detectedUrl . $detectedPath) ?>");
+                (document.createElement("script"),"<?= htmlspecialchars($trackingBaseUrl ?? $detectedUrl . $detectedPath) ?>");
                 </script>
 
                 <!-- Fallback: Image-Pixel für No-JS (nur Seiten, auf denen der Tag direkt platziert ist) -->
-                <noscript><img src="<?= htmlspecialchars($detectedUrl . $detectedPath) ?>/track.php" width="1" height="1" style="display:none" alt=""></noscript></code></pre>
+                <noscript><img src="<?= htmlspecialchars($trackingBaseUrl ?? $detectedUrl . $detectedPath) ?>/track.php" width="1" height="1" style="display:none" alt=""></noscript></code></pre>
 
                 <div class="alert alert-info" style="margin-top:1rem;">
                     <strong>🔒 Sicherheitshinweis:</strong> Die <code>setup.php</code> wurde automatisch deaktiviert (umbenannt zu <code>setup.php.disabled</code>).
