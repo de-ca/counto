@@ -34,13 +34,17 @@ if (file_exists($i18nFile)) {
 // Redirect to setup if not installed (check for SQLite database)
 if (!file_exists(__DIR__ . '/data/counto.db')) {
     $setupPath = __DIR__ . '/setup.php';
+    $setupDisabledPath = __DIR__ . '/setup.php.disabled';
     if (file_exists($setupPath)) {
         header('Location: setup.php');
         exit;
     }
     header('Content-Type: text/html; charset=utf-8');
     http_response_code(503);
-    echo '<!DOCTYPE html><html lang="' . ($lang ?? 'en') . '"><head><meta charset="utf-8"><title>' . __('admin.not_installed') . '</title></head><body><h1>' . __('admin.not_installed') . '</h1><p>' . __('admin.not_installed_desc') . '</p></body></html>';
+    $adminMessage = file_exists($setupDisabledPath)
+        ? 'Die Konfigurationsdatei <code>data/config.json</code> wurde nicht gefunden. Benennen Sie <code>setup.php.disabled</code> zurück zu <code>setup.php</code>.'
+        : __('admin.not_installed_desc');
+    echo '<!DOCTYPE html><html lang="' . ($lang ?? 'en') . '"><head><meta charset="utf-8"><title>' . __('admin.not_installed') . '</title></head><body><h1>' . __('admin.not_installed') . '</h1><p>' . $adminMessage . '</p></body></html>';
     exit;
 }
 

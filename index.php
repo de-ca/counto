@@ -56,9 +56,9 @@ if (!file_exists($configPath)) {
     exit;
 }
 
-// Installed: clean up setup.php if it still exists
+// Installed: rename setup.php → setup.php.disabled for security
 if (file_exists($setupPath)) {
-    @unlink($setupPath);
+    @rename($setupPath, $setupDisabledPath);
 }
 
 // Load required files (NO FileDB, NO Config class from JSON)

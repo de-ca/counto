@@ -9,6 +9,7 @@
 /inc/config.php
 /data/config.json
 /data/.setup_done
+/setup.php.disabled
 
 # Cache & Logs
 /cache/*.json
