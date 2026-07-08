@@ -26,7 +26,7 @@ $trackScriptUrl = $trackingBaseUrl . '/track.php?js=1';
 
 // Ensure $tracking_script_tag is defined (set in admin.php before include)
 if (!isset($tracking_script_tag)) {
-    $tracking_script_tag = '<script defer src="' . $trackingBaseUrl . '/track.js"></script>';
+    $tracking_script_tag = '<script defer src="' . $trackingBaseUrl . '/track.php?js=1"></script>';
 }
 ?>
 <div id="tab-tracking" class="tab-panel">

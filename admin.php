@@ -691,7 +691,7 @@ header('Content-Type: text/html; charset=utf-8');
         <!-- TAB: TRACKING                               -->
         <!-- ============================================ -->
         <?php
-        $tracking_script_tag = '<script defer src="' . rtrim($rawConfig['site']['url'] ?? '', '/') . '/track.js"></script>';
+        $tracking_script_tag = '<script defer src="' . rtrim($rawConfig['site']['url'] ?? '', '/') . '/track.php?js=1"></script>';
         require_once __DIR__ . '/views/admin/tracking.php';
         ?>
 
