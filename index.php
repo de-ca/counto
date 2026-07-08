@@ -298,7 +298,7 @@ header('Content-Type: text/html; charset=utf-8');
     <meta name="twitter:title" content="<?= $siteName ?> – <?= __('dash.title') ?> | Counto Analytics">
     <meta name="twitter:description" content="<?= __('dash.title') ?>. Powered by Counto Analytics.">
     <link rel="stylesheet" href="assets/css/dashboard.css?v=<?= filemtime(__DIR__ . '/assets/css/dashboard.css') ?>">
-    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="assets/counto-banner.svg">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -308,7 +308,7 @@ header('Content-Type: text/html; charset=utf-8');
     <div class="container">
         <div class="header-content">
             <div>
-                <h1 class="header-title"><img src="../favicon.svg" width="24" height="24" alt="counto" style="vertical-align: middle; margin-right: 8px;"><?= $siteName ?></h1>
+                <h1 class="header-title"><img src="assets/counto-banner.svg" width="24" height="24" alt="counto" style="vertical-align: middle; margin-right: 8px;"><?= $siteName ?></h1>
                 <p class="header-subtitle"><?= __('dash.title') ?></p>
             </div>
             <div class="header-links">

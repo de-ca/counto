@@ -543,7 +543,7 @@ header('Content-Type: text/html; charset=utf-8');
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <link rel="stylesheet" href="assets/css/admin.css">
-    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="assets/counto-banner.svg">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body class="admin-body">
@@ -551,7 +551,7 @@ header('Content-Type: text/html; charset=utf-8');
 <!-- Admin Header -->
 <header class="admin-header">
     <button class="menu-toggle" id="menu-toggle" aria-label="<?= __('admin.menu_toggle') ?>">☰</button>
-    <span class="admin-header-title"><img src="../favicon.svg" width="24" height="24" alt="counto" style="vertical-align: middle; margin-right: 8px;"> Admin – <?= $siteName ?></span>
+    <span class="admin-header-title"><img src="assets/counto-banner.svg" width="24" height="24" alt="counto" style="vertical-align: middle; margin-right: 8px;"> Admin – <?= $siteName ?></span>
     <div class="admin-header-actions">
         <button id="admin-refresh-btn" class="btn btn-outline btn-sm">🔄</button>
         <button id="theme-toggle" class="theme-toggle"><?= __('admin.theme_dark') ?></button>
