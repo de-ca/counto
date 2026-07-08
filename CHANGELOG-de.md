@@ -7,6 +7,40 @@ und dieses Projekt hält sich an [Semantic Versioning](https://semver.org/lang/d
 
 ---
 
+## [1.4.0] – 2026-07-08
+
+### Hinzugefügt
+
+- **Rebranding** von "Analytics" zu "Counto" – neues Branding, neue Banner (SVG), aktualisierte Metadaten in allen Dateien
+- **Internationalisierung (i18n)** – vollständige Sprachunterstützung mit Flaggen-Icons für 47 Sprachen (🇩🇪, 🇬🇧, 🇫🇷, 🇪🇸, 🇮🇹, 🇯🇵, 🇨🇳, 🇰🇷, …)
+- **Modularisierte Admin-JavaScript-Struktur** – `assets/js/admin/` mit `core.js`, `charts.js`, `settings.js`, `ui.js`
+- **Modularisierte Chart-Komponenten** – `assets/js/charts/` mit `bar.js`, `line.js`, `doughnut.js`, `core.js`, `loader.js`, `pages.js`
+- **Neue Core-Klassen**: `ConfigStore`, `ConfigValidator`, `DatabaseFacade`, `QueryBuilder`, `Transaction`, `Migration`, `AnalyticsQueries`
+- **Neue Interfaces**: `CacheInterface`, `DatabaseInterface`, `QueryBuilderInterface`, `VisitorInterface`
+- **Neue Traits**: `AnalyticsQueriesTrait`, `CRUDOperationsTrait`, `MaintenanceTrait`, `RateLimitingTrait`, `SchemaBuilderTrait`, `SessionManagementTrait`, `StatisticsTrait`
+- **Stats-Prozessoren**: `DailyStatsProcessor`, `DeviceStatsProcessor`, `SessionStatsProcessor`, `TimeStatsProcessor`
+- **Verbesserte Besuchererkennung**: `BrowserDetector`, `ReferrerAnalyzer`
+- **README** jetzt in Deutsch (`README-de.md`) und Englisch (`README-en.md`) verfügbar
+
+### Geändert
+
+- **Migration der Admin-Oberfläche** – überarbeitetes Admin-Dashboard mit verbesserter UI und modularer Architektur
+- **i18n-Integration** in Admin, Dashboard und Setup-Views
+- **Berechtigungs-Härtung** – strikte Dateiberechtigungen (755 für Verzeichnisse, 644 für Dateien, Owner www-data)
+- **Code-Organisation** – Aufteilung in `inc/Core/`, `inc/Interfaces/`, `inc/Traits/`, `inc/Utils/`, `inc/Stats/`, `inc/Tracking/`
+
+### Sicherheit
+
+- Härtung der Dateiberechtigungen im gesamten Projekt
+- Verbesserte Input-Validierung und Security-Utilities
+
+### Behoben
+
+- Verschiedene Berechtigungs-Probleme bei Shared-Hosting-Umgebungen
+- Kleinere Inkonsistenzen in der Konfigurationsverwaltung
+
+---
+
 ## [1.0.0] – 2026-01-15
 
 ### Hinzugefügt

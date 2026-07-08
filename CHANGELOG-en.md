@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.4.0] – 2026-07-08
+
+### Added
+
+- **Rebranding** from "Analytics" to "Counto" – new branding, new banners (SVG), updated metadata across all files
+- **Internationalization (i18n)** – full language support with flag icons for 47 languages (🇩🇪, 🇬🇧, 🇫🇷, 🇪🇸, 🇮🇹, 🇯🇵, 🇨🇳, 🇰🇷, …)
+- **Modularized admin JavaScript structure** – `assets/js/admin/` with `core.js`, `charts.js`, `settings.js`, `ui.js`
+- **Modularized chart components** – `assets/js/charts/` with `bar.js`, `line.js`, `doughnut.js`, `core.js`, `loader.js`, `pages.js`
+- **New core classes**: `ConfigStore`, `ConfigValidator`, `DatabaseFacade`, `QueryBuilder`, `Transaction`, `Migration`, `AnalyticsQueries`
+- **New interfaces**: `CacheInterface`, `DatabaseInterface`, `QueryBuilderInterface`, `VisitorInterface`
+- **New traits**: `AnalyticsQueriesTrait`, `CRUDOperationsTrait`, `MaintenanceTrait`, `RateLimitingTrait`, `SchemaBuilderTrait`, `SessionManagementTrait`, `StatisticsTrait`
+- **Stats processors**: `DailyStatsProcessor`, `DeviceStatsProcessor`, `SessionStatsProcessor`, `TimeStatsProcessor`
+- **Improved visitor detection**: `BrowserDetector`, `ReferrerAnalyzer`
+- **README** now available in German (`README-de.md`) and English (`README-en.md`)
+
+### Changed
+
+- **Admin UI migration** – redesigned admin dashboard with improved UI and modular architecture
+- **i18n integration** in admin, dashboard, and setup views
+- **Permission hardening** – strict file permissions (755 for directories, 644 for files, owner www-data)
+- **Code organization** – split into `inc/Core/`, `inc/Interfaces/`, `inc/Traits/`, `inc/Utils/`, `inc/Stats/`, `inc/Tracking/`
+
+### Security
+
+- Hardened file permissions across the entire project
+- Improved input validation and security utilities
+
+### Fixed
+
+- Various permission issues in shared hosting environments
+- Minor inconsistencies in configuration management
+
+---
+
 ## [1.0.0] – 2026-01-15
 
 ### Added
