@@ -1,0 +1,43 @@
+{
+    "site": {
+        "name": "Test Site",
+        "url": "https:\/\/test.example.com"
+    },
+    "security": {
+        "admin_password": "$2y$10$cutwlYozELVepj3wsfekweHCl4cYterOZ7JVUOYa78ELmIMgqkaEO",
+        "allowed_ips": [],
+        "enable_public_stats": true,
+        "api_key": "counto_bc2257970eba0965fb9d8a9daf300a46858d2669ca5876b7",
+        "multi_user": false,
+        "rate_limit": {
+            "enabled": true,
+            "max_requests": 100,
+            "window_seconds": 60
+        }
+    },
+    "tracking": {
+        "track_referrers": true,
+        "track_browsers": true,
+        "track_pages": true,
+        "track_devices": true,
+        "track_os": true,
+        "session_timeout": 1800,
+        "ignore_bots": true,
+        "store_ip": false,
+        "timezone": "Europe\/Berlin",
+        "batch_size": 10,
+        "write_interval": 5
+    },
+    "privacy": {
+        "days_to_keep": 90,
+        "anonymize_ip": true,
+        "disable_tracking": false,
+        "cookie_free": true
+    },
+    "system": {
+        "version": "1.4.1",
+        "installed_at": "2026-07-08 10:43:05",
+        "setup_completed": true,
+        "health_checks": true
+    }
+}

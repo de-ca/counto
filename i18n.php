@@ -239,6 +239,12 @@ $translations['en'] = [
     'admin.tracking_endpoint_response'  => 'Response Formats',
 
     // Admin – Tools
+    // Admin – Integration Check
+    'admin.tools_integration_check'      => 'Integration Check',
+    'admin.tools_integration_desc'       => 'Enter a page URL to verify that the Counto tracking script is installed correctly. The server fetches the page source and checks for the tracking tag.',
+    'admin.tools_integration_check_btn'  => 'Check',
+
+    // Admin – Tools
     'admin.tools_cleanup_title'   => 'Data cleanup',
     'admin.tools_cleanup_label'   => 'Delete data older than (days)',
     'admin.tools_cleanup_confirm' => 'Are you sure you want to delete old data? This action cannot be undone.',
@@ -428,6 +434,12 @@ $translations['de'] = [
     'admin.tracking_endpoint_params'    => 'Parameter',
     'admin.tracking_endpoint_response'  => 'Antwortformate',
 
+    // Admin – Integration Check (Deutsch)
+    'admin.tools_integration_check'      => 'Integration prüfen',
+    'admin.tools_integration_desc'       => 'Geben Sie eine Seiten-URL ein, um zu prüfen, ob der Counto-Tracking-Code korrekt eingebaut ist. Der Server ruft den Quelltext ab und sucht nach dem Tracking-Tag.',
+    'admin.tools_integration_check_btn'  => 'Prüfen',
+
+    // Admin – Tools (Deutsch)
     'admin.tools_cleanup_title'   => 'Datenbereinigung',
     'admin.tools_cleanup_label'   => 'Daten löschen, die älter sind als (Tage)',
     'admin.tools_cleanup_confirm' => 'Sind Sie sicher, dass Sie alte Daten löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.',

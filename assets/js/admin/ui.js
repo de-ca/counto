@@ -23,6 +23,35 @@ export function getActiveTab() {
 }
 
 /**
+ * Highlight the active menu item based on URL hash or data-tab attribute.
+ * Compares window.location.hash with each button's data-tab value.
+ * Runs on load and can be called after any AJAX/snapshot load.
+ */
+export function highlightActiveMenu() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const hash = window.location.hash.replace('#', '');
+    const targetTab = hash || 'overview';
+
+    tabButtons.forEach(btn => {
+        const tabId = btn.getAttribute('data-tab');
+        if (tabId === targetTab) {
+            btn.classList.add('active');
+            activeTab = targetTab;
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    // Also show the corresponding panel
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    tabPanels.forEach(panel => panel.classList.remove('active'));
+    const panel = document.getElementById('tab-' + targetTab);
+    if (panel) {
+        panel.classList.add('active');
+    }
+}
+
+/**
  * Initialize tab navigation.
  */
 export function initTabs() {

@@ -11,8 +11,8 @@
 
 import { renderAdminCharts, renderPagesChart, renderReferrersChart } from './admin/charts.js';
 import { getActiveTab } from './admin/ui.js';
-import { initTabs, initSidebar, initDateFilter, initConfirmDialogs, initAdminRefresh, initAdminTheme } from './admin/ui.js';
-import { initSettingsForm, initExportButtons, initBackupTools, initToolActions, triggerExport } from './admin/settings.js';
+import { initTabs, initSidebar, initDateFilter, initConfirmDialogs, initAdminRefresh, initAdminTheme, highlightActiveMenu } from './admin/ui.js';
+import { initSettingsForm, initExportButtons, initBackupTools, initToolActions, initIntegrationCheck, triggerExport } from './admin/settings.js';
 
 /**
  * Safely call an init function, catching errors so one failure
@@ -43,6 +43,7 @@ function init() {
     safeInit('toolActions', initToolActions);
     safeInit('adminRefresh', initAdminRefresh);
     safeInit('adminTheme', initAdminTheme);
+    safeInit('integrationCheck', initIntegrationCheck);
 
     // Render charts if the Visitors tab is initially active (from URL hash)
     const activeTab = getActiveTab();
@@ -76,3 +77,8 @@ if (document.readyState === 'loading') {
 } else {
     init();
 }
+
+// Ensure menu highlighting also runs on window.onload and after snapshots
+window.addEventListener('load', highlightActiveMenu);
+// Re-run on hash changes (e.g., after AJAX snapshot loads trigger hash updates)
+window.addEventListener('hashchange', highlightActiveMenu);

@@ -151,3 +151,52 @@ export function initToolActions() {
 }
 
 export { triggerExport };
+
+/**
+ * Initialize the Integration Check tool.
+ */
+export function initIntegrationCheck() {
+    const btn = document.getElementById('btn-integration-check');
+    const urlInput = document.getElementById('integration-url');
+    const resultDiv = document.getElementById('integration-result');
+
+    if (!btn || !urlInput || !resultDiv) return;
+
+    btn.addEventListener('click', async function () {
+        const checkUrl = urlInput.value.trim();
+        if (!checkUrl) {
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="alert alert-error">Please enter a valid URL.</div>';
+            return;
+        }
+        if (!/^https?:\/\//i.test(checkUrl)) {
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div class="alert alert-error">URL must start with http:// or https://</div>';
+            return;
+        }
+
+        // Show loading state
+        btn.disabled = true;
+        btn.textContent = '⏳ Checking...';
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = '<div class="alert alert-info">Fetching page source and scanning for tracking code...</div>';
+
+        try {
+            const resp = await fetch('admin.php?ajax=integration_check&check_url=' + encodeURIComponent(checkUrl));
+            const data = await resp.json();
+
+            if (data.found) {
+                resultDiv.innerHTML = '<div class="alert alert-success">✅ ' + data.message + '<br><small>Pattern: <code>' + (data.search_pattern || '') + '</code></small></div>';
+            } else if (data.success) {
+                resultDiv.innerHTML = '<div class="alert alert-error">❌ ' + data.message + '<br><small>Expected: <code>' + (data.search_pattern || '') + '</code></small></div>';
+            } else {
+                resultDiv.innerHTML = '<div class="alert alert-error">❌ ' + data.message + '</div>';
+            }
+        } catch (e) {
+            resultDiv.innerHTML = '<div class="alert alert-error">❌ Network error: ' + e.message + '</div>';
+        }
+
+        btn.disabled = false;
+        btn.textContent = 'Check';
+    });
+}

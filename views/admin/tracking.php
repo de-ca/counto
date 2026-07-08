@@ -13,20 +13,23 @@
 
 declare(strict_types=1);
 
-// Build tracking base URL from site URL setting, stripping trailing slash
-$trackingBaseUrl = rtrim($rawConfig['site']['url'] ?? '', '/');
-if (empty($trackingBaseUrl)) {
-    // Fallback: detect from current request
-    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
-    $trackingBaseUrl = $scheme . '://' . $host . $scriptDir;
+// Variables $trackingBaseUrl, $trackScriptUrl, and $tracking_script_tag
+// are pre-computed in admin.php before this view is included.
+// Fallback: compute them dynamically if not already defined.
+if (!isset($trackingBaseUrl)) {
+    $trackingBaseUrl = rtrim($rawConfig['site']['url'] ?? '', '/');
+    if (empty($trackingBaseUrl)) {
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
+        $trackingBaseUrl = $scheme . '://' . $host . $scriptDir;
+    }
 }
-$trackScriptUrl = $trackingBaseUrl . '/track.php?js=1';
-
-// Ensure $tracking_script_tag is defined (set in admin.php before include)
+if (!isset($trackScriptUrl)) {
+    $trackScriptUrl = $trackingBaseUrl . '/track.php?js=1';
+}
 if (!isset($tracking_script_tag)) {
-    $tracking_script_tag = '<script defer src="' . $trackingBaseUrl . '/track.php?js=1"></script>';
+    $tracking_script_tag = '<script defer src="' . $trackScriptUrl . '"></script>';
 }
 ?>
 <div id="tab-tracking" class="tab-panel">

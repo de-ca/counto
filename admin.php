@@ -247,11 +247,67 @@ if (is_dir($backupDir)) {
 require_once __DIR__ . '/inc/admin_chart_data.php';
 
 // =========================================================================
-// AJAX ENDPOINT
+// AJAX ENDPOINTS
 // =========================================================================
 if ($isLoggedIn && isset($_GET['ajax'])) {
     header('Content-Type: application/json; charset=utf-8');
     header('Cache-Control: no-store');
+
+    // Integration Check: curl a URL and verify tracking script presence
+    if ($_GET['ajax'] === 'integration_check' && isset($_GET['check_url'])) {
+        $checkUrl = trim($_GET['check_url']);
+        $result = ['success' => false, 'message' => '', 'found' => false];
+
+        if ($checkUrl === '' || !preg_match('#^https?://#i', $checkUrl)) {
+            $result['message'] = 'Please enter a valid URL starting with http:// or https://';
+            echo json_encode($result);
+            exit;
+        }
+
+        // Build expected tracking script src pattern
+        $trackScriptUrl = rtrim($rawConfig['site']['url'] ?? '', '/') . '/track.php?js=1';
+        $searchPattern = '<script defer src="' . $trackScriptUrl;
+
+        // Use curl for secure fetching
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL            => $checkUrl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_TIMEOUT        => 15,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_USERAGENT      => 'Counto-IntegrationCheck/1.0',
+            CURLOPT_HTTPHEADER     => ['Accept: text/html,application/xhtml+xml'],
+        ]);
+        $html = curl_exec($ch);
+        $curlError = curl_error($ch);
+        $httpCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($curlError) {
+            $result['message'] = 'cURL error: ' . $curlError;
+        } elseif ($httpCode >= 400) {
+            $result['message'] = 'HTTP error ' . $httpCode . ' – could not retrieve the page.';
+        } elseif ($html !== false && $html !== '') {
+            $found = (mb_strpos($html, $searchPattern) !== false);
+            $result['success'] = true;
+            $result['found'] = $found;
+            $result['search_pattern'] = $searchPattern;
+            if ($found) {
+                $result['message'] = 'Tracking code detected! The Counto script tag was found in the page source.';
+            } else {
+                $result['message'] = 'Tracking code NOT detected. The expected script tag was not found in the HTML source.';
+            }
+        } else {
+            $result['message'] = 'Empty response – could not read the page source.';
+        }
+
+        echo json_encode($result);
+        exit;
+    }
+
+    // Default AJAX: live overview data
     echo json_encode([
         'online' => $online,
         'today' => $todaySummary,
@@ -705,7 +761,16 @@ header('Content-Type: text/html; charset=utf-8');
         <!-- TAB: TRACKING                               -->
         <!-- ============================================ -->
         <?php
-        $tracking_script_tag = '<script defer src="' . rtrim($rawConfig['site']['url'] ?? '', '/') . '/track.php?js=1"></script>';
+        // Build dynamic tracking base URL from site.url config, with auto-detection fallback
+        $trackingBaseUrl = rtrim($rawConfig['site']['url'] ?? '', '/');
+        if (empty($trackingBaseUrl)) {
+            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+            $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+            $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
+            $trackingBaseUrl = $scheme . '://' . $host . $scriptDir;
+        }
+        $trackScriptUrl = $trackingBaseUrl . '/track.php?js=1';
+        $tracking_script_tag = '<script defer src="' . $trackScriptUrl . '"></script>';
         require_once __DIR__ . '/views/admin/tracking.php';
         ?>
 
@@ -756,6 +821,25 @@ header('Content-Type: text/html; charset=utf-8');
                             </div>
                         <?php endif; ?>
                     </div>
+                </div>
+            </section>
+
+            <!-- Integration Check -->
+            <section class="admin-section">
+                <h2 class="section-title"><?= __('admin.tools_integration_check') ?></h2>
+                <div class="chart-card">
+                    <p style="margin-bottom:1rem;color:var(--text-secondary);">
+                        <?= __('admin.tools_integration_desc') ?>
+                    </p>
+                    <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+                        <input type="url" id="integration-url" class="form-input" style="flex:1;min-width:280px;"
+                               placeholder="https://example.com" value="<?= e($trackingBaseUrl ?? $rawConfig['site']['url'] ?? '') ?>">
+                        <button id="btn-integration-check" class="btn btn-primary btn-sm">
+                            <?= __('admin.tools_integration_check_btn') ?>
+                        </button>
+                    </div>
+                    <div id="integration-result" style="margin-top:1rem;display:none;"></div>
+                    <input type="hidden" id="integration-track-src" value="<?= e($trackScriptUrl ?? '') ?>">
                 </div>
             </section>
 
