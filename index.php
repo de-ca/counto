@@ -9,7 +9,7 @@
  * @package    Counto
  * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
- * @version 1.0.0
+ * @version 1.4.0
  */
 
 declare(strict_types=1);

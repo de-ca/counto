@@ -12,7 +12,7 @@
  * @package    Counto
  * @copyright  2026 Counto Analytics
  * @license    GPL-3.0-or-later
- * @version 1.0.0
+ * @version 1.4.0
  */
 
 declare(strict_types=1);
@@ -182,124 +182,7 @@ $tracker->flushBuffer();
 // =========================================================================
 $message = '';
 $messageType = 'info';
-
-if ($isLoggedIn && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    // --- CSRF Protection for all POST actions ---
-    $csrfValid = \Counto\Utils\Security::verifyCsrf($_POST['_csrf'] ?? '');
-    if (!$csrfValid) {
-        $message = __('admin.csrf_error');
-        $messageType = 'error';
-    } else {
-        // --- Save Settings (to SQLite) ---
-        if (isset($_POST['save_settings'])) {
-            // Validate DB connection before persisting
-            if (!$db->isConnected()) {
-                $db->connect();
-                if (!$db->isConnected()) {
-                    $message = __('admin.settings_error_db');
-                    $messageType = 'error';
-                }
-            }
-
-            if (empty($message)) {
-                $rawConfig['site']['name'] = trim($_POST['site_name'] ?? $rawConfig['site']['name']);
-                $rawConfig['site']['url'] = trim($_POST['site_url'] ?? $rawConfig['site']['url']);
-                $rawConfig['tracking']['timezone'] = $_POST['timezone'] ?? $rawConfig['tracking']['timezone'];
-                $rawConfig['tracking']['session_timeout'] = (int)($_POST['session_timeout'] ?? 1800);
-                $rawConfig['tracking']['ignore_bots'] = !empty($_POST['ignore_bots']);
-                $rawConfig['privacy']['days_to_keep'] = (int)($_POST['days_to_keep'] ?? 90);
-                $rawConfig['privacy']['disable_tracking'] = !empty($_POST['disable_tracking']);
-                $rawConfig['security']['enable_public_stats'] = !empty($_POST['enable_public_stats']);
-
-                // Persist all settings to SQLite via flat key-value pairs
-                $saveResults = [];
-                $saveResults['site.name'] = $db->setSetting('site.name', $rawConfig['site']['name']);
-                $saveResults['site.url'] = $db->setSetting('site.url', $rawConfig['site']['url']);
-                $saveResults['tracking.timezone'] = $db->setSetting('tracking.timezone', $rawConfig['tracking']['timezone']);
-                $saveResults['tracking.session_timeout'] = $db->setSetting('tracking.session_timeout', (string)$rawConfig['tracking']['session_timeout']);
-                $saveResults['tracking.ignore_bots'] = $db->setSetting('tracking.ignore_bots', $rawConfig['tracking']['ignore_bots'] ? '1' : '0');
-                $saveResults['privacy.days_to_keep'] = $db->setSetting('privacy.days_to_keep', (string)$rawConfig['privacy']['days_to_keep']);
-                $saveResults['privacy.disable_tracking'] = $db->setSetting('privacy.disable_tracking', $rawConfig['privacy']['disable_tracking'] ? '1' : '0');
-                $saveResults['security.enable_public_stats'] = $db->setSetting('security.enable_public_stats', $rawConfig['security']['enable_public_stats'] ? '1' : '0');
-
-                $saveErrors = array_filter($saveResults, fn($v) => $v === false);
-                if (!empty($saveErrors)) {
-                    $allFailed = count($saveErrors) === count($saveResults);
-                    $message = $allFailed ? __('admin.settings_error_save_full') : __('admin.settings_error_save');
-                    $messageType = 'error';
-                } else {
-                    $stats->invalidateCache();
-                    header("Location: admin.php?saved=1");
-                    exit;
-                }
-                $stats->invalidateCache();
-            }
-        }
-
-        // --- Change Password (SQLite) ---
-        if (isset($_POST['change_password'])) {
-            $currentPw = $_POST['current_password'] ?? '';
-            $newPw = $_POST['new_password'] ?? '';
-            $confirmPw = $_POST['confirm_password'] ?? '';
-
-            if (!password_verify($currentPw, $rawConfig['security']['admin_password'] ?? '')) {
-                $message = __('admin.password_wrong');
-                $messageType = 'error';
-            } elseif (strlen($newPw) < 6) {
-                $message = __('admin.password_too_short');
-                $messageType = 'error';
-            } elseif ($newPw !== $confirmPw) {
-                $message = __('admin.password_mismatch');
-                $messageType = 'error';
-            } else {
-                $hash = password_hash($newPw, PASSWORD_BCRYPT);
-                $rawConfig['security']['admin_password'] = $hash;
-                $db->setSetting('security.admin_password', $hash);
-                $message = __('admin.password_changed');
-                $messageType = 'success';
-            }
-        }
-
-        // --- Cleanup Data ---
-        if (isset($_POST['cleanup_data'])) {
-            $days = (int)($_POST['cleanup_days'] ?? 90);
-            $deleted = $tracker->cleanup($days);
-            $stats->invalidateCache();
-            $message = "{$deleted} " . __('admin.tools_cleanup_done') . " {$days} " . __('admin.tools_cleanup_done_suffix');
-            $messageType = 'success';
-        }
-
-        // --- Generate API Token (SQLite) ---
-        if (isset($_POST['generate_token'])) {
-            $token = 'wc_' . bin2hex(random_bytes(24));
-            $rawConfig['security']['api_key'] = $token;
-            $db->setSetting('security.api_key', $token);
-            $message = __('admin.api_generated');
-            $messageType = 'success';
-        }
-
-        // --- Generate Export Token (SQLite) ---
-        if (isset($_POST['generate_export_token'])) {
-            $token = bin2hex(random_bytes(32));
-            $rawConfig['security']['export_token'] = $token;
-            $db->setSetting('security.export_token', $token);
-            $message = __('admin.export_token_generated');
-            $messageType = 'success';
-        }
-
-        // --- Create Backup (SQLite) ---
-        if (isset($_POST['create_backup'])) {
-            $backupResult = $db->backup();
-            if ($backupResult) {
-                $message = __('admin.tools_backup_success') . ' ' . basename($backupResult);
-                $messageType = 'success';
-            } else {
-                $message = __('admin.tools_backup_error');
-                $messageType = 'error';
-            }
-        }
-    } // end CSRF check
-}
+require_once __DIR__ . '/inc/admin_actions.php';
 
 // =========================================================================
 // FETCH DATA FOR ADMIN DASHBOARD
@@ -347,90 +230,7 @@ if (is_dir($backupDir)) {
 // =========================================================================
 // PREPARE CHART DATA (for Visitors tab)
 // =========================================================================
-// Browser distribution
-$browserLabels = [];
-$browserValues = [];
-$browserRows = [];
-foreach ($browsers as $row) {
-    $browserRows[$row['browser'] ?? 'Unknown'] = (int)($row['count'] ?? 0);
-}
-arsort($browserRows);
-foreach (array_slice($browserRows, 0, 10) as $b => $c) {
-    $browserLabels[] = $b;
-    $browserValues[] = $c;
-}
-
-// OS distribution
-$osLabels = [];
-$osValues = [];
-$osRows = [];
-foreach ($osDist as $row) {
-    $osRows[$row['os'] ?? 'Unknown'] = (int)($row['count'] ?? 0);
-}
-arsort($osRows);
-foreach (array_slice($osRows, 0, 8) as $o => $c) {
-    $osLabels[] = $o;
-    $osValues[] = $c;
-}
-
-// Device distribution
-$deviceLabels = [];
-$deviceValues = [];
-$deviceRows = [];
-foreach ($devices as $row) {
-    $deviceRows[$row['device_type'] ?? 'Unknown'] = (int)($row['count'] ?? 0);
-}
-arsort($deviceRows);
-foreach ($deviceRows as $d => $c) {
-    $deviceLabels[] = ucfirst($d);
-    $deviceValues[] = $c;
-}
-
-// Pages data
-$pagesLabels = [];
-$pagesValues = [];
-$pagesData = [];
-$rank = 1;
-foreach ($topPages as $idx => $page) {
-    if (is_array($page)) {
-        $url = $page['page_url'] ?? (array_key_first($page) ?? '');
-        $count = (int)($page['total_views'] ?? (array_values($page)[0] ?? 0));
-    } else {
-        $url = (string)$idx;
-        $count = (int)$page;
-    }
-    if ($url === '') continue;
-    $pagesLabels[] = $url;
-    $pagesValues[] = $count;
-    $pagesData[] = ['url' => $url, 'count' => $count, 'rank' => $rank++];
-}
-
-// Referrers data
-$refLabels = [];
-$refValues = [];
-$refData = [];
-$refRank = 1;
-foreach ($topReferrers as $refEntry) {
-    $refLabel = is_array($refEntry)
-        ? ($refEntry['referrer_domain'] ?? array_key_first($refEntry) ?? 'Direct')
-        : (string)$refEntry;
-    $refCount = is_array($refEntry)
-        ? (int)($refEntry['visits'] ?? (array_values($refEntry)[0] ?? 0))
-        : 0;
-    if ($refLabel === '') $refLabel = 'Direct';
-    $refLabels[] = $refLabel;
-    $refValues[] = $refCount;
-    $refData[] = ['label' => $refLabel, 'count' => $refCount, 'rank' => $refRank++];
-}
-
-// Build JSON chart data for initial render
-$adminChartData = [
-    'browsers' => ['labels' => $browserLabels, 'values' => $browserValues],
-    'os' => ['labels' => $osLabels, 'values' => $osValues],
-    'devices' => ['labels' => $deviceLabels, 'values' => $deviceValues],
-    'pages' => ['labels' => $pagesLabels, 'values' => $pagesValues],
-    'referrers' => ['labels' => $refLabels, 'values' => $refValues],
-];
+require_once __DIR__ . '/inc/admin_chart_data.php';
 
 // =========================================================================
 // AJAX ENDPOINT
@@ -465,54 +265,7 @@ function fmtBytes($bytes): string {
 // RENDER: LOGIN PAGE
 // =========================================================================
 if (!$isLoggedIn) {
-    header('Content-Type: text/html; charset=utf-8');
-    ?>
-    <!DOCTYPE html>
-    <html lang="<?= ($lang ?? 'en') ?>" data-theme="light">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?= __('admin.login_title') ?></title>
-        <link rel="stylesheet" href="assets/css/dashboard.css">
-        <link rel="stylesheet" href="assets/css/admin.css">
-        <style>
-            body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-            .login-box { background: #fff; border-radius: 16px; padding: 2.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.2); max-width: 420px; width: 100%; text-align: center; }
-            .login-box h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #1a1a2e; }
-            .login-box .sub { color: #6b7280; margin-bottom: 1.5rem; font-size: 0.9rem; }
-            .login-box input[type="password"] { width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; margin-bottom: 1rem; text-align: center; transition: border-color 0.2s; }
-            .login-box input[type="password"]:focus { outline: none; border-color: #667eea; }
-            .login-box button { width: 100%; padding: 12px; background: #667eea; color: #fff; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-            .login-box button:hover { background: #5a6fd6; }
-            .login-box .error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; }
-            .login-box .back { display: block; margin-top: 1rem; color: #667eea; font-size: 0.85rem; text-decoration: none; }
-            .login-lang { position: absolute; top: 1rem; right: 1.5rem; }
-            .login-lang a { color: #fff; text-decoration: none; font-weight: 600; font-size: 0.9rem; background: rgba(255,255,255,0.2); padding: 8px 14px; border-radius: 6px; transition: background 0.2s; }
-            .login-lang a:hover { background: rgba(255,255,255,0.35); }
-        </style>
-    </head>
-    <body>
-        <div class="login-lang">
-            <a href="?lang=<?= ($lang ?? 'en') === 'de' ? 'en' : 'de' ?>">
-                <?= ($lang ?? 'en') === 'de' ? __('admin.lang_switch_en') : __('admin.lang_switch_de') ?>
-            </a>
-        </div>
-        <div class="login-box">
-            <h1><?= __('admin.login_heading') ?></h1>
-            <p class="sub"><?= __('admin.login_subtitle') ?></p>
-            <?php if ($loginError): ?>
-                <div class="error"><?= e($loginError) ?></div>
-            <?php endif; ?>
-            <form method="post">
-                <input type="hidden" name="_csrf" value="<?= e($csrfToken) ?>">
-                <input type="password" name="password" placeholder="<?= __('admin.login_password_placeholder') ?>" required autofocus>
-                <button type="submit" name="login"><?= __('admin.login_button') ?></button>
-            </form>
-            <a class="back" href="index.php"><?= __('admin.login_back') ?></a>
-        </div>
-    </body>
-    </html>
-    <?php
+    require_once __DIR__ . '/views/admin/login.php';
     exit;
 }
 
@@ -937,101 +690,10 @@ header('Content-Type: text/html; charset=utf-8');
         <!-- ============================================ -->
         <!-- TAB: TRACKING                               -->
         <!-- ============================================ -->
-        <div id="tab-tracking" class="tab-panel">
-            <section class="admin-section">
-                <h2 class="section-title"><?= __('admin.tracking_title') ?></h2>
-                <p style="margin-bottom:1.5rem;color:var(--text-secondary);">
-                    <?= __('admin.tracking_intro') ?>
-                </p>
-
-                <?php
-                // Build tracking base URL from site URL setting, stripping trailing slash
-                $trackingBaseUrl = rtrim($rawConfig['site']['url'] ?? '', '/');
-                if (empty($trackingBaseUrl)) {
-                    // Fallback: detect from current request
-                    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-                    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-                    $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
-                    $trackingBaseUrl = $scheme . '://' . $host . $scriptDir;
-                }
-                $trackScriptUrl = $trackingBaseUrl . '/track.php?js=1';
-                ?>
-
-                <!-- Option A: Standard Script Tag -->
-                <div class="chart-card" style="margin-bottom:1.5rem;">
-                    <h3 class="chart-title">🔧 <?= __('admin.tracking_option_a') ?></h3>
-                    <p style="margin-bottom:0.75rem;color:var(--text-secondary);">
-                        <?= __('admin.tracking_option_a_desc') ?>
-                    </p>
-                    <pre style="background:var(--card-bg);border:1px solid var(--border);padding:1rem;border-radius:8px;overflow-x:auto;position:relative;"><code><script defer src="<?= e($trackScriptUrl) ?>"></script></code>
-<button class="copy-snippet-btn" style="position:absolute;top:8px;right:8px;background:var(--accent);color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px;" onclick="navigator.clipboard.writeText(this.parentElement.querySelector('code').textContent).then(()=>{this.textContent='✅';setTimeout(()=>{this.textContent='📋';},1500);})">📋</button></pre>
-                    <p class="form-help" style="margin-top:0.5rem;">
-                        💡 <?= __('admin.tracking_option_a_tip') ?>
-                    </p>
-                </div>
-
-                <!-- Option B: Manual Placement -->
-                <div class="chart-card" style="margin-bottom:1.5rem;">
-                    <h3 class="chart-title">📝 <?= __('admin.tracking_option_b') ?></h3>
-                    <p style="margin-bottom:0.75rem;color:var(--text-secondary);">
-                        <?= __('admin.tracking_option_b_desc') ?>
-                    </p>
-                    <ul style="list-style:disc;padding-left:1.5rem;color:var(--text-secondary);line-height:1.8;">
-                        <li><?= __('admin.tracking_option_b_li1') ?></li>
-                        <li><?= __('admin.tracking_option_b_li2') ?></li>
-                        <li><?= __('admin.tracking_option_b_li3') ?></li>
-                    </ul>
-                    <div style="margin-top:1rem;background:var(--info-bg, #f0f4ff);border:1px solid var(--info-border, #c6d5f6);border-radius:8px;padding:0.75rem 1rem;font-size:0.85rem;color:var(--info-text, #2f4a85);">
-                        ⚠️ <?= __('admin.tracking_option_b_note') ?>
-                    </div>
-                </div>
-
-                <!-- Option C: CMS Integration -->
-                <div class="chart-card" style="margin-bottom:1.5rem;">
-                    <h3 class="chart-title">🗂️ <?= __('admin.tracking_option_c') ?></h3>
-                    <p style="margin-bottom:0.75rem;color:var(--text-secondary);">
-                        <?= __('admin.tracking_option_c_desc') ?>
-                    </p>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:1rem;">
-                            <strong>WordPress</strong>
-                            <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.25rem;">
-                                <?= __('admin.tracking_cms_wp') ?>
-                            </p>
-                        </div>
-                        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:1rem;">
-                            <strong>Joomla / Drupal</strong>
-                            <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.25rem;">
-                                <?= __('admin.tracking_cms_other') ?>
-                            </p>
-                        </div>
-                        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:1rem;">
-                            <strong>Shopify / Wix</strong>
-                            <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.25rem;">
-                                <?= __('admin.tracking_cms_hosted') ?>
-                            </p>
-                        </div>
-                        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:1rem;">
-                            <strong><?= __('admin.tracking_cms_custom_title') ?></strong>
-                            <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.25rem;">
-                                <?= __('admin.tracking_cms_custom') ?>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Reference: Tracking URL -->
-                <div class="chart-card">
-                    <h3 class="chart-title">📡 <?= __('admin.tracking_endpoint_title') ?></h3>
-                    <table class="info-table">
-                        <tr><td><?= __('admin.tracking_endpoint_url') ?></td><td><code><?= e($trackingBaseUrl) ?>/track.php</code></td></tr>
-                        <tr><td><?= __('admin.tracking_endpoint_method') ?></td><td>GET</td></tr>
-                        <tr><td><?= __('admin.tracking_endpoint_params') ?></td><td><code>js</code>, <code>page</code>, <code>ref</code>, <code>callback</code></td></tr>
-                        <tr><td><?= __('admin.tracking_endpoint_response') ?></td><td>1×1 GIF, JSON, JavaScript</td></tr>
-                    </table>
-                </div>
-            </section>
-        </div>
+        <?php
+        $tracking_script_tag = '<script defer src="' . rtrim($rawConfig['site']['url'] ?? '', '/') . '/track.js"></script>';
+        require_once __DIR__ . '/views/admin/tracking.php';
+        ?>
 
         <!-- ============================================ -->
         <!-- TAB: TOOLS                                  -->
