@@ -20,7 +20,7 @@ if (function_exists('opcache_invalidate')) { @opcache_invalidate(__FILE__, true)
 
 // ========== CONFIGURATION ==========
 define('counto_START', microtime(true));
-define('counto_DIR', __DIR__);
+define('COUNTO_DIR', __DIR__);
 
 // ========== BOOTSTRAP (SQLite-based, minimal) ==========
 require_once __DIR__ . '/inc/autoload.php';

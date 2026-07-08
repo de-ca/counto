@@ -17,14 +17,12 @@ declare(strict_types=1);
 // =========================================================================
 // BOOTSTRAP
 // =========================================================================
-define('counto_DIR', __DIR__);
+define('COUNTO_DIR', __DIR__);
 
 // i18n (internationalization)
-$i18nBase = dirname(__DIR__) . '/i18n.php';
-if (file_exists($i18nBase)) {
-    require_once $i18nBase;
-} elseif (file_exists(__DIR__ . '/../i18n.php')) {
-    require_once __DIR__ . '/../i18n.php';
+$i18nFile = COUNTO_DIR . '/i18n.php';
+if (file_exists($i18nFile)) {
+    require_once $i18nFile;
 } else {
     // Fallback: minimal translation helper if i18n.php is missing
     function __(string $key): string { return $key; }

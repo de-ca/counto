@@ -14,7 +14,7 @@
 declare(strict_types=1);
 
 // ========== BOOTSTRAP ==========
-define('counto_DIR', __DIR__);
+define('COUNTO_DIR', __DIR__);
 require_once __DIR__ . '/inc/autoload.php';
 require_once __DIR__ . '/inc/Visitor.php';
 require_once __DIR__ . '/inc/Tracker.php';

@@ -27,7 +27,7 @@
 declare(strict_types=1);
 
 // ========== BOOTSTRAP ==========
-define('counto_DIR', __DIR__);
+define('COUNTO_DIR', __DIR__);
 
 // DB path – SQLite is the only storage
 $dbPath = __DIR__ . '/data/counto.db';
