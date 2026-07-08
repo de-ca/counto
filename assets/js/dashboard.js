@@ -183,6 +183,10 @@
             if (!response.ok) throw new Error('HTTP ' + response.status);
 
             const result = await response.json();
+
+            // Debug: log the full API response for stability analysis
+            console.log('[Counto] API snapshot response:', result);
+
             if (!result.success || !result.data) return;
 
             const d = result.data;
@@ -191,60 +195,74 @@
             // Resolve online count (multiple possible keys)
             const onlineVal = d.online ?? d.currently_online ?? (d.today ? d.today.realtime_online : null) ?? 0;
 
-            // Update online count
-            const onlineEl = document.getElementById('online-count');
-            if (onlineEl && onlineVal !== undefined) {
-                updateCounter(onlineEl, onlineVal, false);
-                lastOnlineCount = onlineVal;
+            // Update online count (null-safe: only update if value is valid)
+            if (onlineVal !== null && onlineVal !== undefined) {
+                const onlineEl = document.getElementById('online-count');
+                if (onlineEl) {
+                    updateCounter(onlineEl, onlineVal, false);
+                    lastOnlineCount = onlineVal;
 
-                // Pulse indicator
-                const pulseEl = document.querySelector('.stat-card__pulse');
-                if (pulseEl) {
-                    pulseEl.style.display = onlineVal > 0 ? 'block' : 'none';
+                    // Pulse indicator
+                    const pulseEl = document.querySelector('.stat-card__pulse');
+                    if (pulseEl) {
+                        pulseEl.style.display = onlineVal > 0 ? 'block' : 'none';
+                    }
                 }
             }
 
             // Update today visitors (resolve from multiple possible key paths)
             const todayVisitors = d.today_visitors
                 ?? (d.today ? (d.today.visitors_today ?? d.today.visitors) : null)
-                ?? 0;
-            const todayVisEl = document.getElementById('today-visitors');
-            if (todayVisEl) {
-                updateCounter(todayVisEl, todayVisitors, animate);
+                ?? null;
+            if (todayVisitors !== null && todayVisitors !== undefined) {
+                const todayVisEl = document.getElementById('today-visitors');
+                if (todayVisEl) {
+                    updateCounter(todayVisEl, todayVisitors, animate);
+                }
             }
 
             // Update today pageviews (resolve from multiple possible key paths)
             const todayPageviews = d.today_pageviews
                 ?? (d.today ? (d.today.pageviews_today ?? d.today.pageviews) : null)
-                ?? 0;
-            const todayPvEl = document.getElementById('today-pageviews');
-            if (todayPvEl) {
-                updateCounter(todayPvEl, todayPageviews, animate);
+                ?? null;
+            if (todayPageviews !== null && todayPageviews !== undefined) {
+                const todayPvEl = document.getElementById('today-pageviews');
+                if (todayPvEl) {
+                    updateCounter(todayPvEl, todayPageviews, animate);
+                }
             }
 
             // Update total visitors
-            const totalEl = document.getElementById('total-visitors');
-            if (totalEl && d.overall) {
-                const totalVisitors = d.overall.total_visitors
+            const totalVisitors = d.overall
+                ? (d.overall.total_visitors
                     ?? (d.overall.totals ? d.overall.totals.visitors : null)
                     ?? d.overall.visitors
-                    ?? 0;
-                updateCounter(totalEl, totalVisitors, animate);
+                    ?? null)
+                : null;
+            if (totalVisitors !== null && totalVisitors !== undefined) {
+                const totalEl = document.getElementById('total-visitors');
+                if (totalEl) {
+                    updateCounter(totalEl, totalVisitors, animate);
+                }
             }
 
-            // Update bounce rate if element exists
-            const bounceEl = document.getElementById('bounce-rate');
-            if (bounceEl && d.bounce_rate !== undefined) {
-                bounceEl.textContent = Math.round(d.bounce_rate) + '%';
+            // Update bounce rate if element exists (null-safe)
+            if (d.bounce_rate !== null && d.bounce_rate !== undefined) {
+                const bounceEl = document.getElementById('bounce-rate');
+                if (bounceEl) {
+                    bounceEl.textContent = Math.round(d.bounce_rate) + '%';
+                }
             }
 
-            // Update avg time if element exists
-            const avgTimeEl = document.getElementById('avg-time');
-            if (avgTimeEl) {
-                const avgDur = d.avg_duration
-                    ?? (d.today ? d.today.session_duration_avg : null)
-                    ?? 0;
-                avgTimeEl.textContent = formatTime(avgDur);
+            // Update avg time if element exists (null-safe)
+            const avgDur = d.avg_duration
+                ?? (d.today ? d.today.session_duration_avg : null)
+                ?? null;
+            if (avgDur !== null && avgDur !== undefined) {
+                const avgTimeEl = document.getElementById('avg-time');
+                if (avgTimeEl) {
+                    avgTimeEl.textContent = formatTime(avgDur);
+                }
             }
 
             // Update last-update timestamp

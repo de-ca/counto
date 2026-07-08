@@ -103,8 +103,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 try {
     switch ($action) {
         case 'snapshot':
-            $snapshot = $stats->getDashboardSnapshot();
-            sendJson(['success' => true, 'data' => $snapshot]);
+            try {
+                $snapshot = $stats->getDashboardSnapshot();
+
+                // Validate snapshot integrity: if the response is empty or
+                // key metrics are missing/null, return a 503 so the frontend
+                // does not blindly overwrite valid DOM values with zeros.
+                if (!is_array($snapshot) || $snapshot === []) {
+                    sendJsonError('Database snapshot is empty — query may have failed.', 503);
+                }
+
+                // Check for obviously broken data (all key fields zero/null
+                // while today data should at least have a 'today' key set)
+                $hasToday   = !empty($snapshot['today']);
+                $hasOverall = !empty($snapshot['overall']);
+
+                if (!$hasToday && !$hasOverall) {
+                    // No meaningful stats — return empty body so frontend
+                    // keeps previous values intact
+                    http_response_code(503);
+                    header('Content-Type: application/json; charset=utf-8');
+                    echo json_encode((object) [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                    exit;
+                }
+
+                sendJson(['success' => true, 'data' => $snapshot]);
+            } catch (Throwable $e) {
+                // DB query failure — return empty JSON body, not zero-filled stats
+                http_response_code(503);
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode((object) [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                exit;
+            }
             break;
 
         case 'summary':
