@@ -34,18 +34,20 @@ trait AnalyticsQueriesTrait
      */
     public function getDailyStats(string $date): ?array
     {
+        // Query the raw visits table directly — the v_daily_summary view
+        // may not exist in databases created from the inline schema fallback.
         $row = $this->queryOne(
-            'SELECT * FROM v_daily_summary WHERE date = :date',
+            'SELECT DATE(timestamp) as date,
+                    COUNT(DISTINCT visitor_id) as visitors,
+                    COUNT(DISTINCT visitor_id) as unique_visitors,
+                    COUNT(*) as pageviews,
+                    SUM(CASE WHEN is_bounce = 1 THEN 1 ELSE 0 END) as bounces,
+                    COALESCE(AVG(load_time), 0) as avg_load_time
+             FROM visits
+             WHERE DATE(timestamp) = :date
+             GROUP BY DATE(timestamp)',
             [':date' => $date]
         );
-
-        if ($row === null) {
-            // Fall back to raw daily_stats if view row is missing
-            $row = $this->queryOne(
-                'SELECT * FROM daily_stats WHERE date = :date',
-                [':date' => $date]
-            );
-        }
 
         return $row;
     }
@@ -59,8 +61,19 @@ trait AnalyticsQueriesTrait
      */
     public function getDailyStatsRange(string $from, string $to): array
     {
+        // Query the raw visits table directly — the v_daily_summary view
+        // may not exist in databases created from the inline schema fallback.
         return $this->query(
-            'SELECT * FROM v_daily_summary WHERE date >= :from AND date <= :to ORDER BY date ASC',
+            'SELECT DATE(timestamp) as date,
+                    COUNT(DISTINCT visitor_id) as visitors,
+                    COUNT(DISTINCT visitor_id) as unique_visitors,
+                    COUNT(*) as pageviews,
+                    SUM(CASE WHEN is_bounce = 1 THEN 1 ELSE 0 END) as bounces,
+                    COALESCE(AVG(load_time), 0) as avg_load_time
+             FROM visits
+             WHERE DATE(timestamp) >= :from AND DATE(timestamp) <= :to
+             GROUP BY DATE(timestamp)
+             ORDER BY date ASC',
             [':from' => $from, ':to' => $to]
         );
     }
@@ -262,11 +275,26 @@ trait AnalyticsQueriesTrait
      */
     public function getTodaySummary(): array
     {
-        $row = $this->queryOne('SELECT * FROM v_today_stats');
+        // Query the raw visits table directly — the v_today_stats view
+        // may not exist in databases created from the inline schema fallback.
+        $today = date('Y-m-d');
+        $row = $this->queryOne(
+            'SELECT DATE(timestamp) as date,
+                    COUNT(DISTINCT visitor_id) as visitors_today,
+                    COUNT(DISTINCT CASE WHEN v.is_bot = 0 THEN vs.visitor_id END) as human_visitors,
+                    COUNT(*) as pageviews_today,
+                    COALESCE(AVG(load_time), 0) as avg_load_time,
+                    SUM(CASE WHEN is_bounce = 1 THEN 1 ELSE 0 END) as bounces_today
+             FROM visits vs
+             LEFT JOIN visitors v ON v.id = vs.visitor_id
+             WHERE DATE(timestamp) = :today
+             GROUP BY DATE(timestamp)',
+            [':today' => $today]
+        );
         $realtime = $this->getRealtimeVisitors(5);
 
         return [
-            'date' => date('Y-m-d'),
+            'date' => $today,
             'visitors_today' => (int)($row['visitors_today'] ?? 0),
             'human_visitors' => (int)($row['human_visitors'] ?? 0),
             'pageviews_today' => (int)($row['pageviews_today'] ?? 0),
