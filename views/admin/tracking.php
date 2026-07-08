@@ -15,21 +15,25 @@ declare(strict_types=1);
 
 // Variables $trackingBaseUrl, $trackScriptUrl, and $tracking_script_tag
 // are pre-computed in admin.php before this view is included.
-// Fallback: compute them dynamically if not already defined.
-if (!isset($trackingBaseUrl)) {
-    $trackingBaseUrl = rtrim($rawConfig['site']['url'] ?? '', '/');
-    if (empty($trackingBaseUrl)) {
-        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
-        $trackingBaseUrl = $scheme . '://' . $host . $scriptDir;
+// Fallback: compute them dynamically via auto-detection if not already defined.
+if (!isset($baseUrl)) {
+    $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+    $baseUrl .= $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $baseUrl .= dirname($_SERVER['SCRIPT_NAME']);
+    // Fallback to config site.url if server vars are incomplete
+    if (empty($_SERVER['HTTP_HOST']) || empty($_SERVER['SCRIPT_NAME'])) {
+        $baseUrl = rtrim($rawConfig['site']['url'] ?? '', '/');
     }
 }
+if (!isset($trackingBaseUrl)) {
+    $trackingBaseUrl = $baseUrl;
+}
 if (!isset($trackScriptUrl)) {
-    $trackScriptUrl = $trackingBaseUrl . '/track.php?js=1';
+    $trackScriptUrl = $baseUrl . '/track.php?js=1';
 }
 if (!isset($tracking_script_tag)) {
-    $tracking_script_tag = '<script defer src="' . $trackScriptUrl . '"></script>';
+    // Universal inline tracking snippet – auto-detects the correct base URL on every installation
+    $tracking_script_tag = '<script>(function(e,n){e.src=n+"/track.php?js=1";e.async=!0;document.head.appendChild(e)})(document.createElement("script"),"' . $baseUrl . '");</script>';
 }
 ?>
 <div id="tab-tracking" class="tab-panel">

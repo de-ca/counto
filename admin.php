@@ -761,16 +761,18 @@ header('Content-Type: text/html; charset=utf-8');
         <!-- TAB: TRACKING                               -->
         <!-- ============================================ -->
         <?php
-        // Build dynamic tracking base URL from site.url config, with auto-detection fallback
-        $trackingBaseUrl = rtrim($rawConfig['site']['url'] ?? '', '/');
-        if (empty($trackingBaseUrl)) {
-            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-            $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-            $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
-            $trackingBaseUrl = $scheme . '://' . $host . $scriptDir;
+        // Build dynamic tracking base URL via auto-detection, with config fallback
+        $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+        $baseUrl .= $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $baseUrl .= dirname($_SERVER['SCRIPT_NAME']);
+        // Fallback to config site.url if server vars are incomplete
+        if (empty($_SERVER['HTTP_HOST']) || empty($_SERVER['SCRIPT_NAME'])) {
+            $baseUrl = rtrim($rawConfig['site']['url'] ?? '', '/');
         }
-        $trackScriptUrl = $trackingBaseUrl . '/track.php?js=1';
-        $tracking_script_tag = '<script defer src="' . $trackScriptUrl . '"></script>';
+        $trackingBaseUrl = $baseUrl;
+        $trackScriptUrl = $baseUrl . '/track.php?js=1';
+        // Universal inline tracking snippet – auto-detects the correct base URL on every installation
+        $tracking_script_tag = '<script>(function(e,n){e.src=n+"/track.php?js=1";e.async=!0;document.head.appendChild(e)})(document.createElement("script"),"' . $baseUrl . '");</script>';
         require_once __DIR__ . '/views/admin/tracking.php';
         ?>
 
